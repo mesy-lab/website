@@ -1,5 +1,14 @@
 import React from "react";
 
+const BASE_PATH = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+
+function withBase(href) {
+  if (!href || !href.startsWith("/")) return href;
+  if (!BASE_PATH) return href;
+  return `${BASE_PATH}${href === "/" ? "/" : href}`;
+}
+
+
 const navGroups = [
   { label: "Home", href: "/" },
   {
@@ -201,7 +210,13 @@ const news = [
 ];
 
 function path() {
-  return window.location.pathname.replace(/\/+$/, "") || "/";
+  let pathname = window.location.pathname;
+
+  if (BASE_PATH && pathname.startsWith(BASE_PATH)) {
+    pathname = pathname.slice(BASE_PATH.length) || "/";
+  }
+
+  return pathname.replace(/\/+$/, "") || "/";
 }
 
 function isActive(href) {
@@ -214,7 +229,7 @@ function Header() {
 
   return (
     <header className="site-header">
-      <a className="brand" href="/">
+      <a className="brand" href={withBase("/")}>
         <span className="brand-mark">MESY</span>
         <span>
           <strong>MESY Lab</strong>
@@ -228,19 +243,19 @@ function Header() {
         {navGroups.map((group) =>
           group.children ? (
             <div className="nav-item" key={group.label}>
-              <a className={isActive(group.href) ? "active" : ""} href={group.href}>
+              <a className={isActive(group.href) ? "active" : ""} href={withBase(group.href)}>
                 {group.label}
               </a>
               <div className="dropdown-menu">
                 {group.children.map((child) => (
-                  <a className={isActive(child.href) ? "active" : ""} href={child.href} key={child.href}>
+                  <a className={isActive(child.href) ? "active" : ""} href={withBase(child.href)} key={child.href}>
                     {child.label}
                   </a>
                 ))}
               </div>
             </div>
           ) : (
-            <a className={isActive(group.href) ? "active" : ""} href={group.href} key={group.href}>
+            <a className={isActive(group.href) ? "active" : ""} href={withBase(group.href)} key={group.href}>
               {group.label}
             </a>
           ),
@@ -261,10 +276,10 @@ function Hero() {
           mobile robots, and LiDAR-based perception.
         </p>
         <div className="hero-actions">
-          <a className="button primary" href="/research">
+          <a className="button primary" href={withBase("/research")}>
             Explore Research
           </a>
-          <a className="button ghost" href="/contact">
+          <a className="button ghost" href={withBase("/contact")}>
             Join the Lab
           </a>
         </div>
@@ -295,7 +310,7 @@ function Home() {
         />
         <div className="card-grid four">
           {researchAreas.map((area) => (
-            <a className="research-card" href={area.href} key={area.title}>
+            <a className="research-card" href={withBase(area.href)} key={area.title}>
               <span className="icon-pill">{area.icon}</span>
               <h3>{area.title}</h3>
               <p>{area.summary}</p>
@@ -474,7 +489,7 @@ function Research({ slug }) {
       <section className="section">
         <div className="detail-list">
           {researchAreas.map((area, index) => (
-            <a href={area.href} key={area.title}>
+            <a href={withBase(area.href)} key={area.title}>
               <span>{String(index + 1).padStart(2, "0")}</span>
               <div>
                 <h2>{area.title}</h2>

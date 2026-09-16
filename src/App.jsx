@@ -1,6 +1,9 @@
 import React from "react";
 
 const BASE_PATH = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+const SCHOLAR_URL =
+  "https://scholar.google.co.kr/citations?hl=ko&user=slQXBPoAAAAJ&view_op=list_works&sortby=pubdate";
+const YOUTUBE_URL = "https://www.youtube.com/@mesylab_hyu";
 
 function withBase(href) {
   if (!href || !href.startsWith("/")) return href;
@@ -24,24 +27,19 @@ const navGroups = [
     label: "Research",
     href: "/research",
     children: [
-      { label: "Robot Manipulator", href: "/research/robot-manipulator" },
-      { label: "LiDAR Filtering", href: "/research/lidar-filtering" },
+      { label: "Marine Robotics & Automated Mooring", href: "/research#marine" },
+      { label: "Mobile Robotics & Mechanism Design", href: "/research#mobile" },
       {
-        label: "Mechatronics System Design & Control",
-        href: "/research/mechatronics-system-design-control",
+        label: "Robust Perception in Adverse Environments",
+        href: "/research#perception",
       },
-      { label: "Auto Drive & Mobile Robot", href: "/research/auto-drive-mobile-robot" },
+      { label: "Lab Automation & Digital Engineering", href: "/research#digital" },
     ],
   },
   {
-    label: "Publications",
-    href: "/publications",
-    children: [
-      { label: "International Journal Articles", href: "/publications/international-journal" },
-      { label: "Domestic Journal Articles", href: "/publications/domestic-journal" },
-      { label: "Conference Proceedings", href: "/publications/conference-proceedings" },
-      { label: "Patents", href: "/publications/patents" },
-    ],
+    label: "Publications ↗",
+    href: SCHOLAR_URL,
+    external: true,
   },
   { label: "Projects", href: "/projects" },
   { label: "Gallery & News", href: "/gallery-news" },
@@ -50,36 +48,119 @@ const navGroups = [
 
 const researchAreas = [
   {
-    title: "Robot Manipulator",
-    href: "/research/robot-manipulator",
-    icon: "RM",
+    id: "marine",
+    number: "01",
+    title: "Marine Robotics & Automated Mooring",
+    href: "/research#marine",
+    icon: "MR",
+    navDescription: "Hydraulic robotic systems and coordinated ship-robot control.",
     summary:
-      "Automatic mooring robots, valve rotating manipulators, and 6-axis/7-axis robot platforms.",
-    items: ["Automatic mooring robot", "Valve rotating robot manipulator", "R-BIZ challenge platform"],
+      "We investigate robotic systems that can interact safely and reliably with large maritime structures. Current work focuses on automated ship mooring using hydraulically actuated robots and model-based control.",
+    videoTitle: "Automated Mooring Robot",
+    videoDescription:
+      "Hydraulically actuated robotic systems for automated ship mooring and coordinated control.",
+    videoId: "",
+    keywords: ["Hydraulic Actuation", "Force Control", "Multi-Robot Coordination", "Ship Dynamics"],
+    items: [
+      "Mooring robot mechanism design",
+      "Impedance & force control",
+      "Ship-robot coupled dynamics",
+      "Simulation-based validation",
+    ],
+    relatedLabel: "Related publications",
   },
   {
-    title: "LiDAR Filtering",
-    href: "/research/lidar-filtering",
-    icon: "LF",
+    id: "mobile",
+    number: "02",
+    title: "Mobile Robotics & Mechanism Design",
+    href: "/research#mobile",
+    icon: "MM",
+    navDescription: "Tracked robots, manipulation mechanisms, and field mobility.",
     summary:
-      "LiDAR point-cloud filtering and snow-noise removal for autonomous driving and mobile robots.",
-    items: ["Snowfall recognition", "Real-time snow removal", "Point-cloud reliability"],
+      "We design mobile and manipulation mechanisms for environments where conventional robots cannot operate reliably. Mechanical configuration, dynamic stability, embedded sensing, and control are considered together.",
+    videoTitle: "Tracked Mobile Robot Platform",
+    videoDescription:
+      "Mechanism and system design for robust mobility in rough, cluttered, and discontinuous terrain.",
+    videoId: "",
+    keywords: ["Tracked Robot", "Mechanism Design", "Dynamic Stability", "ROS 2"],
+    items: [
+      "Extreme-environment mobility",
+      "Stair & obstacle traversal",
+      "Mechanism optimization",
+      "Embedded robotic systems",
+    ],
+    relatedLabel: "Related publications",
   },
   {
-    title: "Mechatronics System Design & Control",
-    href: "/research/mechatronics-system-design-control",
-    icon: "MC",
+    id: "perception",
+    number: "03",
+    title: "Robust Perception in Adverse Environments",
+    href: "/research#perception",
+    icon: "RP",
+    navDescription: "LiDAR, radar, vision, and sensing under snow and harsh weather.",
     summary:
-      "Mechanical design and control of actuators, robotic joints, and compliant mechanisms.",
-    items: ["Variable radius pulley", "Twisted string actuator joint", "Rubber-based series elastic actuator"],
+      "We develop sensing and perception methods that remain useful in snow, rain, fog, dust, and other adverse conditions. Research spans point-cloud filtering, multi-modal sensing, and object recognition and tracking.",
+    videoTitle: "Perception in Snowy Weather",
+    videoDescription:
+      "Robust LiDAR, radar, and camera perception when weather degrades conventional sensing.",
+    videoId: "",
+    keywords: ["LiDAR", "Radar", "Computer Vision", "Adverse Weather"],
+    items: [
+      "LiDAR snowfall filtering",
+      "Object detection & tracking",
+      "Multi-sensor perception",
+      "Real-time implementation",
+    ],
+    relatedLabel: "Related publications",
   },
   {
-    title: "Auto Drive & Mobile Robot",
-    href: "/research/auto-drive-mobile-robot",
-    icon: "AM",
+    id: "digital",
+    number: "04",
+    title: "Lab Automation & Digital Engineering",
+    href: "/research#digital",
+    icon: "LD",
+    navDescription: "Automation middleware, multibody simulation, and digital workflows.",
     summary:
-      "Mobile robots and autonomous driving systems using LiDAR, GPS, camera, and field perception.",
-    items: ["Mobile robot mapping", "Autonomous driving perception", "Climbing robot"],
+      "We are extending mechatronic-system research toward integrated automation and digital engineering: experiment orchestration, device middleware, multibody dynamics, and simulation-centered system design.",
+    videoTitle: "Automation & Digital Engineering",
+    videoDescription:
+      "Connecting robot systems, laboratory devices, simulation models, and experimental workflows.",
+    videoId: "",
+    keywords: ["Lab Automation", "Middleware", "Multibody Dynamics", "Digital Twin"],
+    items: [
+      "Robot-instrument integration",
+      "Automation workflow design",
+      "ADAMS / Simscape modeling",
+      "Model-based engineering",
+    ],
+    relatedLabel: "Related projects",
+  },
+];
+
+const researchVideos = [
+  {
+    title: "Automated Mooring Robot Demonstration",
+    area: "Marine Robotics",
+  },
+  {
+    title: "Tracked Robot Mobility & Stair Traversal",
+    area: "Mobile Robotics",
+  },
+  {
+    title: "LiDAR Perception in Snowfall Conditions",
+    area: "Perception",
+  },
+  {
+    title: "Ship-Robot Integrated Simulation",
+    area: "Simulation",
+  },
+  {
+    title: "Robotic Mechanism Design & Validation",
+    area: "Mechanism",
+  },
+  {
+    title: "Laboratory Automation Workflow",
+    area: "Automation",
   },
 ];
 
@@ -255,7 +336,13 @@ function Header() {
               </div>
             </div>
           ) : (
-            <a className={isActive(group.href) ? "active" : ""} href={withBase(group.href)} key={group.href}>
+            <a
+              className={group.external ? "external-link" : isActive(group.href) ? "active" : ""}
+              href={withBase(group.href)}
+              key={group.href}
+              rel={group.external ? "noopener noreferrer" : undefined}
+              target={group.external ? "_blank" : undefined}
+            >
               {group.label}
             </a>
           ),
@@ -456,50 +543,209 @@ function Alumni({ compact = false }) {
   );
 }
 
-function Research({ slug }) {
-  const area = researchAreas.find((item) => item.href.endsWith(slug || ""));
-  if (area && slug) {
+function ResearchVideo({ area }) {
+  if (area.videoId) {
     return (
-      <>
-        <PageHero eyebrow="Research" title={area.title} body={area.summary} visual />
-        <section className="section">
-          <div className="detail-list">
-            {area.items.map((item, index) => (
-              <article key={item}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <div>
-                  <h2>{item}</h2>
-                  <p>{area.summary}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      </>
+      <div className="research-video-shell">
+        <iframe
+          title={area.videoTitle}
+          src={`https://www.youtube-nocookie.com/embed/${area.videoId}?rel=0`}
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      </div>
     );
   }
+
   return (
-    <>
-      <PageHero
-        eyebrow="Research"
-        title="Mechanical systems, autonomy, and intelligent control."
-        body="MESY Lab studies mechatronics system design and control, robot manipulators, autonomous driving, and mobile robots."
-        visual
-      />
-      <section className="section">
-        <div className="detail-list">
-          {researchAreas.map((area, index) => (
-            <a href={withBase(area.href)} key={area.title}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <div>
-                <h2>{area.title}</h2>
-                <p>{area.summary}</p>
-              </div>
-            </a>
-          ))}
+    <div className="research-video-shell">
+      <div className="research-video-placeholder">
+        <div>
+          <span className="research-video-label">Representative video</span>
+          <span className="research-video-caption">Replace with YouTube video ID</span>
+        </div>
+        <div className="research-video-bottom">
+          <div>
+            <h3>{area.videoTitle}</h3>
+            <p>{area.videoDescription}</p>
+          </div>
+          <a
+            className="research-mini-play"
+            href={YOUTUBE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Watch ${area.videoTitle} on YouTube`}
+          >
+            ▶
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Research() {
+  return (
+    <div className="research-page">
+      <section className="research-hero">
+        <div className="research-wrap research-hero-grid">
+          <div className="research-hero-copy">
+            <div className="research-logo-badge" aria-hidden="true">MESY</div>
+            <div className="research-eyebrow">Research at MESY Lab</div>
+            <h1>Robotics & Mechatronics for Extreme Environments</h1>
+            <p>
+              We develop reliable robotic systems by integrating mechanism design, dynamic modeling,
+              control, and robust perception for real-world environments.
+            </p>
+            <div className="research-hero-actions">
+              <a className="research-button research-button-primary" href="#research-areas">
+                Explore Research <span>↓</span>
+              </a>
+              <a
+                className="research-button research-button-ghost"
+                href={YOUTUBE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                MESY Lab YouTube ↗
+              </a>
+            </div>
+          </div>
+          <a
+            className="research-showreel"
+            href={YOUTUBE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open MESY Lab YouTube channel"
+          >
+            <div className="research-showreel-copy">
+              <span className="research-play">▶</span>
+              <strong>MESY Lab Research Overview</strong>
+              <small>Future showreel · 40-60 sec recommended</small>
+            </div>
+            <span className="research-hero-chip">Mechanism · Dynamics · Control · Perception</span>
+          </a>
         </div>
       </section>
-    </>
+
+      <nav className="research-area-nav" id="research-areas" aria-label="Research areas">
+        <div className="research-wrap">
+          <div className="research-area-index-grid">
+            {researchAreas.map((area) => (
+              <a className="research-area-index-card" href={`#${area.id}`} key={area.id}>
+                <span>{area.number}</span>
+                <h2>{area.title}</h2>
+                <p>{area.navDescription}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      {researchAreas.map((area, index) => (
+        <section
+          className={`research-field-section ${index % 2 === 1 ? "alt reverse" : ""}`}
+          id={area.id}
+          key={area.id}
+        >
+          <div className="research-wrap research-field-grid">
+            <ResearchVideo area={area} />
+            <div className="research-field-copy">
+              <div className="research-kicker">Research Area {area.number}</div>
+              <h2>{area.title}</h2>
+              <p className="research-lead">{area.summary}</p>
+              <div className="research-tags">
+                {area.keywords.map((keyword) => (
+                  <span key={keyword}>{keyword}</span>
+                ))}
+              </div>
+              <ul className="research-feature-list">
+                {area.items.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <a
+                className="research-text-link"
+                href={area.relatedLabel === "Related projects" ? withBase("/projects") : SCHOLAR_URL}
+                target={area.relatedLabel === "Related projects" ? undefined : "_blank"}
+                rel={area.relatedLabel === "Related projects" ? undefined : "noopener noreferrer"}
+              >
+                {area.relatedLabel} <span>→</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      ))}
+
+      <section className="research-principle">
+        <div className="research-wrap">
+          <div className="research-principle-box">
+            <div>
+              <div className="research-kicker">How we work</div>
+              <h2>From physical systems to reliable autonomy.</h2>
+            </div>
+            <div className="research-principle-steps">
+              {[
+                ["01", "Design", "Mechanisms and robotic platforms shaped around the operating environment."],
+                ["02", "Model & Control", "Dynamics, simulation, and control for stable and predictable behavior."],
+                ["03", "Sense & Validate", "Robust perception and experimental validation under real-world conditions."],
+              ].map(([number, title, body]) => (
+                <article className="research-principle-step" key={number}>
+                  <strong>{number}</strong>
+                  <span>{title}</span>
+                  <p>{body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="research-video-library" id="videos">
+        <div className="research-wrap">
+          <div className="research-section-head">
+            <div>
+              <div className="research-eyebrow">Research Videos</div>
+              <h2>See the research in motion.</h2>
+            </div>
+            <p>
+              Use this section for recent experiments, simulation results, system demonstrations, and
+              conference-ready research videos. Each card can link directly to YouTube.
+            </p>
+          </div>
+          <div className="research-video-grid">
+            {researchVideos.map((video) => (
+              <a
+                className="research-video-card"
+                href={YOUTUBE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                key={video.title}
+              >
+                <div className="research-video-thumb">
+                  <span>{video.area}</span>
+                </div>
+                <div className="research-video-meta">
+                  <small>Research Video</small>
+                  <h3>{video.title}</h3>
+                </div>
+              </a>
+            ))}
+          </div>
+          <div className="research-channel-cta">
+            <a
+              className="research-button research-button-primary"
+              href={YOUTUBE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View all videos on YouTube ↗
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
 

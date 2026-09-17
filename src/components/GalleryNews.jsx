@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ChevronLeft, ChevronRight, Expand, ImageOff, Play, X } from "lucide-react";
 import archive from "../data/galleryArchive.json";
 import imported from "../data/galleryImported.json";
+import { mergeGalleryPosts } from "../data/gallery-posts.js";
 import "./gallery-news.css";
 
 const categories = { all: "All", news: "News", publication: "Publications", award: "Awards", conference: "Conferences", "lab-life": "Lab life" };
-const posts = [...archive, ...imported].sort((a, b) => b.date.localeCompare(a.date));
+const posts = mergeGalleryPosts(archive, imported);
 const years = [...new Set(posts.map((post) => post.date.slice(0, 4)))];
 const availableCategories = Object.entries(categories).filter(([key]) => key === "all" || posts.some((post) => post.category === key));
 const localUrl = (src) => src?.startsWith("/") ? `${import.meta.env.BASE_URL}${src.slice(1)}` : src;

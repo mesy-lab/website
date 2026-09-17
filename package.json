@@ -6,7 +6,8 @@
   "scripts": {
     "gallery:sync": "node scripts/sync-gallery.mjs",
     "gallery:sync:drive": "node scripts/sync-gallery.mjs --drive",
-    "test:gallery": "node --test scripts/sync-gallery.test.mjs scripts/gallery-drive.test.mjs",
+    "gallery:export": "node scripts/export-gallery-drive.mjs",
+    "test:gallery": "node --test scripts/sync-gallery.test.mjs scripts/gallery-drive.test.mjs scripts/check-gallery-drive.test.mjs scripts/export-gallery-drive.test.mjs",
     "prebuild": "node scripts/sync-gallery.mjs",
     "dev": "node node_modules/vite/bin/vite.js --host 127.0.0.1",
     "build": "node node_modules/vite/bin/vite.js build",

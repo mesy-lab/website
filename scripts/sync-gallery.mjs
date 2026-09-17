@@ -23,6 +23,18 @@ export function validatePost(post, id) {
   if (post.body !== undefined && typeof post.body !== "string") throw new Error(`${id}: body must be text`);
   if (post.sourceUrl && !/^https:\/\//.test(post.sourceUrl)) throw new Error(`${id}: sourceUrl must use HTTPS`);
   if (post.youtube !== undefined && (!Array.isArray(post.youtube) || post.youtube.some((id) => typeof id !== "string" || !/^[\w-]{11}$/.test(id)))) throw new Error(`${id}: youtube must be an array of 11-character video IDs`);
+  if (post.mediaAlt !== undefined && (!post.mediaAlt || typeof post.mediaAlt !== "object" || Array.isArray(post.mediaAlt) || Object.values(post.mediaAlt).some((value) => typeof value !== "string"))) throw new Error(`${id}: mediaAlt must map filenames or video IDs to text`);
+}
+
+export function mediaAlt(post, key, fallback) {
+  return Object.hasOwn(post.mediaAlt || {}, key) ? post.mediaAlt[key] : fallback;
+}
+
+export function checkExpectedMedia(post, filenames, id) {
+  for (const filename of Object.keys(post.mediaAlt || {})) {
+    if (!extensions.has(path.extname(filename).toLowerCase())) continue;
+    if (filenames.filter((name) => name === filename).length !== 1) throw new Error(`${id}: expected exactly one media file named ${filename}; finish uploading all files before syncing`);
+  }
 }
 
 // Build the entire import in memory first: a bad folder cannot replace the last good manifest.
@@ -46,8 +58,10 @@ export async function collectGallery(source, existingIds = []) {
     if (post.published !== true) continue;
     validatePost(post, folder.name);
     if (existingIds.includes(folder.name)) throw new Error(`Duplicate archive ID: ${folder.name}`);
+    const files = await readdir(dir, { withFileTypes: true });
+    checkExpectedMedia(post, files.filter((file) => !file.isDirectory()).map((file) => file.name), folder.name);
     const media = [];
-    for (const file of (await readdir(dir, { withFileTypes: true })).sort((a, b) => a.name.localeCompare(b.name, "en", { numeric: true }))) {
+    for (const file of files.sort((a, b) => a.name.localeCompare(b.name, "en", { numeric: true }))) {
       const ext = path.extname(file.name).toLowerCase();
       if (!extensions.has(ext)) continue;
       const filename = await realpath(path.join(dir, file.name));
@@ -58,9 +72,9 @@ export async function collectGallery(source, existingIds = []) {
       const digest = createHash("sha256").update(await readFile(filename)).digest("hex").slice(0, 20);
       const outputName = `${digest}${ext}`;
       assets.push({ source: filename, name: outputName });
-      media.push({ type: extensions.get(ext), src: `/media/news/imported/${outputName}`, alt: `${post.title} - ${file.name}` });
+      media.push({ type: extensions.get(ext), src: `/media/news/imported/${outputName}`, alt: mediaAlt(post, file.name, `${post.title} - ${file.name}`) });
     }
-    for (const videoId of post.youtube || []) media.push({ type: "youtube", videoId, alt: post.title });
+    for (const videoId of post.youtube || []) media.push({ type: "youtube", videoId, alt: mediaAlt(post, videoId, post.title) });
     posts.push({ id: folder.name, date: post.date, ...(post.endDate ? { endDate: post.endDate } : {}), title: post.title.trim(), category: post.category, body: post.body || "", ...(post.sourceUrl ? { sourceUrl: post.sourceUrl } : {}), media });
   }
   return { posts: posts.sort((a, b) => b.date.localeCompare(a.date)), assets };
@@ -77,11 +91,9 @@ async function main() {
     return;
   }
   if (source && /^https?:\/\//i.test(source)) throw new Error("For Google Drive, use --drive. For desktop sync, use a local folder path.");
-  const archive = JSON.parse(await readFile(path.join(project, "src/data/galleryArchive.json"), "utf8"));
-  const existingIds = archive.map((post) => post.id);
   const { posts, assets } = driveMode
-    ? await (await import("./gallery-drive.mjs")).collectDriveGallery(config.folderId, existingIds)
-    : await collectGallery(source, existingIds);
+    ? await (await import("./gallery-drive.mjs")).collectDriveGallery(config.folderId)
+    : await collectGallery(source);
   const destination = path.join(project, "public/media/news/imported");
   await mkdir(destination, { recursive: true });
   for (const asset of assets) {

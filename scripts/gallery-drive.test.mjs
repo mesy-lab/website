@@ -70,6 +70,10 @@ test("fails on duplicate metadata, IDs and inaccessible roots instead of clearin
   first.data.post.push({ id: "second-meta", name: "post.json" });
   await assert.rejects(collectDriveGallery("root", [], first.client), /duplicate post.json/);
   await assert.rejects(collectDriveGallery("root", ["lab-event"], fixture().client), /Duplicate post ID/);
+  const duplicate = fixture();
+  duplicate.data.root.push({ id: "second-post", name: "lab-event", mimeType: folderType });
+  duplicate.data["second-post"] = duplicate.data.post;
+  await assert.rejects(collectDriveGallery("root", [], duplicate.client), /Duplicate post ID/);
   const other = fixture();
   other.client.folder = async () => ({ mimeType: "image/jpeg" });
   await assert.rejects(collectDriveGallery("root", [], other.client), /not an available folder/);

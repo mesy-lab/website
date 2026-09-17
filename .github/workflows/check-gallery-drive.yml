@@ -1,0 +1,33 @@
+name: Check Gallery Drive connection (no deployment)
+
+on:
+  push:
+    branches: ["codex/drive-connection-check"]
+    paths:
+      - ".github/workflows/check-gallery-drive.yml"
+      - "scripts/check-gallery-drive.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+      - name: Prepare isolated Google authentication client
+        run: |
+          mkdir -p "$RUNNER_TEMP/mesy-gallery-check"
+          cp scripts/check-gallery-drive.mjs "$RUNNER_TEMP/mesy-gallery-check/check-gallery-drive.mjs"
+          npm install --prefix "$RUNNER_TEMP/mesy-gallery-check" --ignore-scripts --no-audit --no-fund google-auth-library@11.0.2
+      - name: Verify Gallery folder access (metadata only)
+        run: node "$RUNNER_TEMP/mesy-gallery-check/check-gallery-drive.mjs"
+        env:
+          GALLERY_DRIVE_SERVICE_ACCOUNT: ${{ secrets.GALLERY_DRIVE_SERVICE_ACCOUNT }}
+          GALLERY_DRIVE_FOLDER_ID: 1Gu3HzY7zMQYlBWwYUgJ8juNDqVsgCAC_
+          GALLERY_DRIVE_EXPECTED_EMAIL: mesy-gallery-reader@gen-lang-client-0414457231.iam.gserviceaccount.com

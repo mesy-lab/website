@@ -4,12 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "gallery:sync": "node scripts/sync-gallery.mjs",
+    "gallery:sync:drive": "node scripts/sync-gallery.mjs --drive",
+    "test:gallery": "node --test scripts/sync-gallery.test.mjs scripts/gallery-drive.test.mjs",
+    "prebuild": "node scripts/sync-gallery.mjs",
     "dev": "node node_modules/vite/bin/vite.js --host 127.0.0.1",
     "build": "node node_modules/vite/bin/vite.js build",
     "preview": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.4",
+    "lucide-react": "^1.46.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "typescript": "^5.8.3",
@@ -17,5 +22,8 @@
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.62.2"
+  },
+  "devDependencies": {
+    "google-auth-library": "^11.0.2"
   }
 }

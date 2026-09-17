@@ -1,4 +1,10 @@
 import React from "react";
+import GalleryNews from "./components/GalleryNews.jsx";
+import {
+  HOW_WE_WORK_YOUTUBE_URL,
+  getPublishedHowWeWorkVideo,
+  howWeWorkStages,
+} from "./data/howWeWork.js";
 
 const BASE_PATH = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
 const SCHOLAR_URL =
@@ -36,6 +42,7 @@ const navGroups = [
       { label: "Lab Automation & Digital Engineering", href: "/research#digital" },
     ],
   },
+  { label: "How We Work", href: "/how-we-work" },
   {
     label: "Publications ↗",
     href: SCHOLAR_URL,
@@ -305,17 +312,22 @@ function isActive(href) {
   return href === "/" ? current === "/" : current === href || current.startsWith(`${href}/`);
 }
 
+function LabLogo({ variant = "wide-dark", className = "" }) {
+  const files = { "mark-blue": "001", "wide-blue": "002", "mark-dark": "003", "wide-dark": "004" };
+  return (
+    <span className={`lab-logo lab-logo--${variant} ${className}`}>
+      <img src={withBase(`/branding/${files[variant]}.png`)} alt="MESY Lab - Mechatronics System Laboratory" />
+    </span>
+  );
+}
+
 function Header() {
   const toggleMenu = () => document.querySelector(".site-nav")?.classList.toggle("open");
 
   return (
     <header className="site-header">
       <a className="brand" href={withBase("/")}>
-        <span className="brand-mark">MESY</span>
-        <span>
-          <strong>MESY Lab</strong>
-          <small>Mechatronics System Laboratory</small>
-        </span>
+        <LabLogo />
       </a>
       <button className="menu-button" type="button" onClick={toggleMenu} aria-label="Toggle navigation">
         Menu
@@ -591,7 +603,7 @@ function Research() {
       <section className="research-hero">
         <div className="research-wrap research-hero-grid">
           <div className="research-hero-copy">
-            <div className="research-logo-badge" aria-hidden="true">MESY</div>
+            <div className="research-logo-badge"><LabLogo variant="mark-dark" /></div>
             <div className="research-eyebrow">Research at MESY Lab</div>
             <h1>Robotics & Mechatronics for Extreme Environments</h1>
             <p>
@@ -687,15 +699,15 @@ function Research() {
             </div>
             <div className="research-principle-steps">
               {[
-                ["01", "Design", "Mechanisms and robotic platforms shaped around the operating environment."],
-                ["02", "Model & Control", "Dynamics, simulation, and control for stable and predictable behavior."],
-                ["03", "Sense & Validate", "Robust perception and experimental validation under real-world conditions."],
-              ].map(([number, title, body]) => (
-                <article className="research-principle-step" key={number}>
+                ["01", "Design", "Mechanisms and robotic platforms shaped around the operating environment.", "design"],
+                ["02", "Model & Control", "Dynamics, simulation, and control for stable and predictable behavior.", "model-control"],
+                ["03", "Sense & Validate", "Robust perception and experimental validation under real-world conditions.", "sense-validate"],
+              ].map(([number, title, body, id]) => (
+                <a className="research-principle-step" href={withBase(`/how-we-work#${id}`)} key={number}>
                   <strong>{number}</strong>
                   <span>{title}</span>
                   <p>{body}</p>
-                </article>
+                </a>
               ))}
             </div>
           </div>
@@ -741,6 +753,245 @@ function Research() {
               rel="noopener noreferrer"
             >
               View all videos on YouTube ↗
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function HowWeWorkVideo({ video, activeVideoId, onActivate }) {
+  if (!video) return null;
+
+  const isActive = activeVideoId === video.id;
+  const startParam = Number.isFinite(video.startSeconds) ? `&start=${video.startSeconds}` : "";
+  const endParam = Number.isFinite(video.endSeconds) ? `&end=${video.endSeconds}` : "";
+
+  return (
+    <figure className="work-video-figure">
+      <div className="work-video-frame">
+        {isActive && video.provider === "local" ? (
+          <video controls autoPlay muted playsInline preload="metadata"
+            src={withBase(video.localSrc)} aria-label={video.displayTitle}>
+            {video.captionsSrc && <track kind="captions" src={withBase(video.captionsSrc)} srcLang="en" label="English" />}
+          </video>
+        ) : isActive ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${video.videoId}?autoplay=1&mute=1&rel=0${startParam}${endParam}`}
+            title={`${video.originalTitle} - MESY Lab research video`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        ) : (
+          <button
+            className="work-video-poster"
+            type="button"
+            onClick={() => onActivate(video.id)}
+            aria-label={`Play ${video.displayTitle}`}
+          >
+            <span className="work-video-fallback" aria-hidden="true">
+              MESY LAB VIDEO
+            </span>
+            {(video.posterSrc || video.provider === "youtube") && <img
+              src={video.posterSrc ? withBase(video.posterSrc) : `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
+              alt=""
+              loading="lazy"
+              onError={(event) => {
+                event.currentTarget.hidden = true;
+              }}
+            />}
+            <span className="work-video-shade" aria-hidden="true" />
+            <span className="work-video-type">{video.mediaType}</span>
+            <span className="work-video-play" aria-hidden="true">▶</span>
+            <span className="work-video-title">{video.displayTitle}</span>
+          </button>
+        )}
+      </div>
+      <figcaption className="work-video-caption">
+        <div>
+          <span>MESY Lab</span>
+          <strong>{video.displayTitle}</strong>
+        </div>
+        <a href={video.provider === "local" ? withBase(video.localSrc) : video.sourceUrl} target="_blank" rel="noopener noreferrer">
+          {video.provider === "local" ? "Open video ↗" : "Watch on YouTube ↗"}
+        </a>
+      </figcaption>
+    </figure>
+  );
+}
+
+function HowWeWorkStage({ stage, index, activeVideoId, onActivate }) {
+  const video = getPublishedHowWeWorkVideo(stage.videoRef);
+
+  return (
+    <section className={`work-stage ${index % 2 === 1 ? "alt reverse" : ""}`} id={stage.id}>
+      <div className="work-shell work-stage-grid">
+        <div className="work-stage-copy">
+          <p className="work-stage-number">{stage.number}</p>
+          <h2>{stage.title}</h2>
+          <h3>{stage.subtitle}</h3>
+          <p className="work-stage-description">{stage.description}</p>
+          <ul className="work-activity-list">
+            {stage.activities.map((activity) => (
+              <li key={activity}>{activity}</li>
+            ))}
+          </ul>
+        </div>
+          <div className={`work-stage-media ${video ? "" : "work-stage-context"}`}>
+            {video && <HowWeWorkVideo video={video} activeVideoId={activeVideoId} onActivate={onActivate} />}
+            <div className="work-video-notes">
+              {stage.notes.map((note) => (
+                <div key={note.label}>
+                  <h4>{note.label}</h4>
+                  <p>{note.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+      </div>
+    </section>
+  );
+}
+
+function ConnectedProcess() {
+  return (
+    <section className="work-connected" aria-labelledby="connected-title">
+      <div className="work-shell">
+        <div className="work-connected-heading">
+          <p className="work-eyebrow">ONE SYSTEM. CONNECTED THINKING.</p>
+          <h2 id="connected-title">Progress through continuous exchange.</h2>
+          <p>Design decisions shape the models. Models guide control and evaluation.
+            Observations refine both the physical system and its behavior.</p>
+        </div>
+        <div className="work-network">
+          <svg className="work-network-lines" viewBox="0 0 1000 520" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <marker id="process-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+              </marker>
+            </defs>
+            <path d="M 378 140 C 265 163 182 249 180 325" />
+            <path d="M 622 140 C 735 163 818 249 820 325" />
+            <path d="M 335 411 Q 500 500 665 411" />
+          </svg>
+          <a href="#design" className="work-network-node network-design">
+            <span>01</span><h3>Design</h3><p>Requirements &amp; physical systems</p>
+          </a>
+          <a href="#model-control" className="work-network-node network-model">
+            <span>02</span><h3>Model &amp; Control</h3><p>Dynamics &amp; system response</p>
+          </a>
+          <a href="#sense-validate" className="work-network-node network-sense">
+            <span>03</span><h3>Sense &amp; Validate</h3><p>Observations &amp; evaluation</p>
+          </a>
+          <div className="work-network-center"><span>SHARED OBJECTIVE</span><strong>System development</strong><p>Question · Develop · Learn</p></div>
+          <span className="work-network-label network-label-left">Design constraints ↔ Model insights</span>
+          <span className="work-network-label network-label-right">Requirements ↔ Observed behavior</span>
+          <span className="work-network-label network-label-bottom">Predictions ↔ Measurements</span>
+        </div>
+        <dl className="work-exchanges">
+          <div><dt>Design ↔ Model &amp; Control</dt><dd>Physical choices inform the model; analysis guides hardware and control requirements.</dd></div>
+          <div><dt>Model &amp; Control ↔ Sense &amp; Validate</dt><dd>Predictions guide evaluation; measurements refine models and control strategies.</dd></div>
+          <div><dt>Sense &amp; Validate ↔ Design</dt><dd>Requirements define what to assess; findings guide the next design decisions.</dd></div>
+        </dl>
+      </div>
+    </section>
+  );
+}
+
+function HowWeWork() {
+  const [activeVideoId, setActiveVideoId] = React.useState(null);
+
+  return (
+    <div className="work-page">
+      <section className="work-hero">
+        <div className="work-shell work-hero-grid">
+          <div className="work-hero-copy">
+            <LabLogo variant="mark-blue" className="work-hero-logo" />
+            <p className="work-eyebrow">HOW WE WORK</p>
+            <h1>From Ideas to Validated Systems</h1>
+            <p>
+              We connect mechanism design, dynamic modeling, control, and sensing to develop and evaluate
+              robotic systems for real-world applications.
+            </p>
+            <div className="work-hero-actions">
+              <a className="work-button primary" href="#design">
+                Explore Our Process <span>↓</span>
+              </a>
+              <a
+                className="work-button secondary"
+                href={HOW_WE_WORK_YOUTUBE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Watch on YouTube ↗
+              </a>
+            </div>
+          </div>
+          <div className="work-cycle" aria-label="MESY Lab iterative research process">
+            {howWeWorkStages.map((stage) => (
+              <a href={`#${stage.id}`} key={stage.id}>
+                <span>{stage.number}</span>
+                <strong>{stage.title}</strong>
+              </a>
+            ))}
+            <p>Evaluation informs the next design iteration.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="work-overview" id="process">
+        <div className="work-shell">
+          <div className="work-section-heading">
+            <p className="work-eyebrow">A CONNECTED ENGINEERING LOOP</p>
+            <h2>Three views of one development process.</h2>
+            <p>
+              Design, modeling and control, and validation continuously inform one another as the system
+              develops.
+            </p>
+          </div>
+          <div className="work-overview-grid">
+            {howWeWorkStages.map((stage) => (
+              <a className="work-overview-card" href={`#${stage.id}`} key={stage.id}>
+                <span>{stage.number}</span>
+                <h3>{stage.title}</h3>
+                <p>{stage.subtitle}</p>
+                <strong aria-hidden="true">↓</strong>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {howWeWorkStages.map((stage, index) => (
+        <HowWeWorkStage
+          stage={stage}
+          index={index}
+          activeVideoId={activeVideoId}
+          onActivate={setActiveVideoId}
+          key={stage.id}
+        />
+      ))}
+
+      <ConnectedProcess />
+
+      <section className="work-cta">
+        <div className="work-shell work-cta-inner">
+          <div>
+            <p className="work-eyebrow">EXPLORE MORE</p>
+            <h2>See where the process is applied.</h2>
+          </div>
+          <div className="work-cta-actions">
+            <a className="work-button primary dark" href={withBase("/research")}>
+              Explore Our Research →
+            </a>
+            <a
+              className="work-button outline"
+              href={HOW_WE_WORK_YOUTUBE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit Our YouTube Channel ↗
             </a>
           </div>
         </div>
@@ -816,29 +1067,6 @@ function Projects() {
   );
 }
 
-function GalleryNews() {
-  return (
-    <>
-      <PageHero
-        eyebrow="Gallery News"
-        title="Lab moments, awards, and announcements."
-        body="Selected lab news, awards, conference participation, and student activities."
-      />
-      <section className="section">
-        <div className="news-grid">
-          {news.map(([title, body, tag]) => (
-            <article className="news-card large" key={title}>
-              <span>{tag}</span>
-              <h3>{title}</h3>
-              <p>{body}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-    </>
-  );
-}
-
 function Contact() {
   return (
     <>
@@ -903,7 +1131,7 @@ function Footer() {
   return (
     <footer className="site-footer">
       <div>
-        <h3>MESY Lab</h3>
+        <LabLogo variant="wide-blue" />
         <p>Mechatronics System Laboratory</p>
         <p>Hanyang University ERICA</p>
       </div>
@@ -926,6 +1154,7 @@ function App() {
   if (current === "/members/alumni") page = <Members type="alumni" />;
   if (current === "/research") page = <Research />;
   if (current.startsWith("/research/")) page = <Research slug={current.split("/").pop()} />;
+  if (current === "/how-we-work") page = <HowWeWork />;
   if (current === "/publications") page = <Publications />;
   if (current.startsWith("/publications/")) page = <Publications slug={current.split("/").pop()} />;
   if (current === "/projects") page = <Projects />;

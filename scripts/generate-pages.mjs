@@ -10,7 +10,7 @@ if (!fs.existsSync(indexFile)) {
 
 const html = fs.readFileSync(indexFile, "utf8");
 
-const routes = ["members", "members/professor", "members/student", "members/alumni", "research", "research/robot-manipulator", "research/lidar-filtering", "research/mechatronics-system-design-control", "research/auto-drive-mobile-robot", "publications", "publications/international-journal", "publications/domestic-journal", "publications/conference-proceedings", "publications/patents", "projects", "gallery-news", "contact"];
+const routes = ["members", "members/professor", "members/student", "members/alumni", "research", "research/robot-manipulator", "research/lidar-filtering", "research/mechatronics-system-design-control", "research/auto-drive-mobile-robot", "how-we-work", "publications", "publications/international-journal", "publications/domestic-journal", "publications/conference-proceedings", "publications/patents", "projects", "gallery-news", "contact"];
 
 for (const route of routes) {
   const dir = path.join(distDir, route);

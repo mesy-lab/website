@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { JWT } from "google-auth-library";
-import { extensions, validatePost } from "./sync-gallery.mjs";
+import { checkExpectedMedia, extensions, mediaAlt, validatePost } from "./sync-gallery.mjs";
 
 const folderType = "application/vnd.google-apps.folder";
 const maxFileSize = 50 * 1024 * 1024;
@@ -92,6 +92,7 @@ export async function collectDriveGallery(folderId, existingIds = [], client = c
     validatePost(post, folder.name);
     if (ids.has(folder.name)) throw new Error(`Duplicate post ID: ${folder.name}`);
     ids.add(folder.name);
+    checkExpectedMedia(post, files.filter((file) => !file.mimeType.startsWith("application/vnd.google-apps.")).map((file) => file.name), folder.name);
     const media = [];
     for (const file of files.sort((a, b) => a.name.localeCompare(b.name, "en", { numeric: true }))) {
       const ext = path.extname(file.name).toLowerCase();
@@ -100,9 +101,9 @@ export async function collectDriveGallery(folderId, existingIds = [], client = c
       totalSize += data.length;
       const name = `${createHash("sha256").update(data).digest("hex").slice(0, 20)}${ext}`;
       assets.push({ name, data });
-      media.push({ type: extensions.get(ext), src: `/media/news/imported/${name}`, alt: `${post.title} - ${file.name}` });
+      media.push({ type: extensions.get(ext), src: `/media/news/imported/${name}`, alt: mediaAlt(post, file.name, `${post.title} - ${file.name}`) });
     }
-    for (const videoId of post.youtube || []) media.push({ type: "youtube", videoId, alt: post.title });
+    for (const videoId of post.youtube || []) media.push({ type: "youtube", videoId, alt: mediaAlt(post, videoId, post.title) });
     posts.push({ id: folder.name, date: post.date, ...(post.endDate ? { endDate: post.endDate } : {}), title: post.title.trim(), category: post.category, body: post.body || "", ...(post.sourceUrl ? { sourceUrl: post.sourceUrl } : {}), media });
   }
   return { posts: posts.sort((a, b) => b.date.localeCompare(a.date)), assets };

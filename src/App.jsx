@@ -1,5 +1,6 @@
 import React from "react";
 import GalleryNews from "./components/GalleryNews.jsx";
+import ProfessorProfile from "./components/ProfessorProfile.jsx";
 import {
   HOW_WE_WORK_YOUTUBE_URL,
   getPublishedHowWeWorkVideo,
@@ -469,28 +470,7 @@ function Members({ type }) {
 }
 
 function Professor({ compact = false }) {
-  return (
-    <>
-      {!compact && <PageHero eyebrow="Professor" title="Principal Investigator" body="Research leadership and advising information for MESY Lab." />}
-      <section className={compact ? "category-block" : "section"}>
-        {compact && <SectionHeader eyebrow="Professor" title="Principal Investigator" />}
-        <div className="profile-panel">
-          <div className="portrait large">PI</div>
-          <div>
-            <h2>Jihyuk Park</h2>
-            <p>Associate Professor, Department of Mechanical Engineering, Hanyang University ERICA.</p>
-            <p>
-              Research interests: mechatronics system design and control, robot manipulators, mobile robots,
-              autonomous driving, and LiDAR-based perception.
-            </p>
-            <p>Education: Ph.D. and B.S. in Mechanical Engineering, KAIST.</p>
-            <p>Email: jihyuk@hanyang.ac.kr</p>
-            <p>Office: Rm. 210, Building V, Hanyang University ERICA.</p>
-          </div>
-        </div>
-      </section>
-    </>
-  );
+  return <ProfessorProfile compact={compact} withBase={withBase} scholarUrl={SCHOLAR_URL} />;
 }
 
 function Students({ compact = false }) {

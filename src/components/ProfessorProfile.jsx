@@ -52,13 +52,14 @@ const service = [
   },
 ];
 
-// These appointments have ended. Add date ranges once the end years are confirmed.
 const formerLeadership = [
   {
+    period: "2024 – 2026",
     title: "Director, Future Automotive Convergence Research Institute",
     organization: "Yeungnam University",
   },
   {
+    period: "2023 – 2026",
     title: "Director, RIS Gyeongbuk Advanced Industry Talent Development Program",
     organization: "Future Automotive Sector",
   },
@@ -170,7 +171,11 @@ export default function ProfessorProfile({ compact = false, withBase, scholarUrl
               <h3 className="professor-former-heading">Former leadership roles</h3>
               <ul className="professor-former-list">
                 {formerLeadership.map((item) => (
-                  <li key={item.title}><h4>{item.title}</h4><p>{item.organization}</p></li>
+                  <li key={item.title}>
+                    <span className="professor-period">{item.period}</span>
+                    <h4>{item.title}</h4>
+                    <p>{item.organization}</p>
+                  </li>
                 ))}
               </ul>
             </section>

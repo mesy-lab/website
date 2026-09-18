@@ -29,6 +29,21 @@ export function createDriveClient(auth, fetcher = fetch) {
     if (!response.ok) throw new Error(`Drive request failed (HTTP ${response.status}). Check API activation and Viewer access to the selected folder.`);
     return response;
   }
+  async function readLimited(response, limit, name) {
+    const reader = response.body.getReader();
+    const chunks = [];
+    let size = 0;
+    try {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        size += value.length;
+        if (size > limit) { await reader.cancel(); throw new Error(`${name}: exceeds the download size limit`); }
+        chunks.push(Buffer.from(value));
+      }
+    } finally { reader.releaseLock(); }
+    return Buffer.concat(chunks);
+  }
   return {
     async folder(id) {
       return (await request(`files/${encodeURIComponent(id)}`, { fields: "id,mimeType,trashed", supportsAllDrives: "true" })).json();
@@ -54,19 +69,11 @@ export function createDriveClient(auth, fetcher = fetch) {
     async download(file, limit) {
       if (Number(file.size) > limit) throw new Error(`${file.name}: exceeds the download size limit`);
       const response = await request(`files/${encodeURIComponent(file.id)}`, { alt: "media", supportsAllDrives: "true" });
-      const reader = response.body.getReader();
-      const chunks = [];
-      let size = 0;
-      try {
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          size += value.length;
-          if (size > limit) { await reader.cancel(); throw new Error(`${file.name}: exceeds the download size limit`); }
-          chunks.push(Buffer.from(value));
-        }
-      } finally { reader.releaseLock(); }
-      return Buffer.concat(chunks);
+      return readLimited(response, limit, file.name);
+    },
+    async exportText(file, limit) {
+      const response = await request(`files/${encodeURIComponent(file.id)}/export`, { mimeType: "text/plain" });
+      return readLimited(response, limit, file.name);
     },
   };
 }

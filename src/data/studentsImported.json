@@ -1,0 +1,42 @@
+{
+  "synced": true,
+  "students": [
+    {
+      "id": "jaeyong-lee",
+      "name": "Jaeyong Lee",
+      "nameKo": "",
+      "level": "ms",
+      "email": "robot002@hanyang.ac.kr",
+      "research": [
+        "ROS2-based robot control",
+        "Reinforcement learning Sim2Real"
+      ],
+      "biography": "Jaeyong Lee received the B.S. degree in Mechanical Engineering from Yeungnam University, Gyeongsan, Republic of Korea, in 2025. From September 2025 to February 2026, he was an M.S. student in Mechanical Engineering at Yeungnam University. He is currently pursuing the M.S. degree in Mechanical Design Engineering at Hanyang University ERICA, Ansan, Republic of Korea. His research interests include mobile robot systems and algorithms for improving robot robustness and autonomy in extreme environments.",
+      "order": 1
+    },
+    {
+      "id": "gihyeon-kim",
+      "name": "Gihyeon Kim",
+      "nameKo": "",
+      "level": "ms",
+      "email": "gihyeon@hanyang.ac.kr",
+      "research": [
+        "Control algorithm design"
+      ],
+      "biography": "Gihyeon Kim received the B.S. degree in Mechanical Engineering from Yeungnam University, Gyeongsan, South Korea, in 2026. He is currently pursuing the M.S. degree in Mechanical Design Engineering at Hanyang University ERICA, Ansan, South Korea. His research interests include mechatronic system integration, mobile robot systems, and autonomous navigation and control.",
+      "order": 2
+    },
+    {
+      "id": "jungmin-kim",
+      "name": "Jungmin Kim",
+      "nameKo": "",
+      "level": "ms",
+      "email": "az123457963@hanyang.ac.kr",
+      "research": [
+        "Marine manipulation"
+      ],
+      "biography": "Jungmin Kim received the B.S. degree in Mechanical Engineering from Hanyang University ERICA, Ansan, Republic of Korea, in 2026. He is currently pursuing the M.S. degree in Mechanical Design Engineering at Hanyang University ERICA and conducting research at the Mechatronics System Laboratory. His research interests include mechatronic system design and control and robotic manipulation. His current research focuses on motion compensation control for end-effector position stabilization in marine environments.",
+      "order": 3
+    }
+  ]
+}

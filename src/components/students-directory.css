@@ -1,0 +1,53 @@
+.students-page { padding: clamp(48px, 6vw, 84px) clamp(20px, 5vw, 72px); background: linear-gradient(180deg, #f5f8fb, #fff 430px); }
+.students-wrap { max-width: 1160px; margin-inline: auto; }
+.students-heading { max-width: 800px; }
+.students-heading .eyebrow { color: #7a531f; font-size: 12px; letter-spacing: .08em; }
+.students-heading h1, .students-heading h2 { margin: 0; color: var(--navy); font-size: clamp(36px, 4.5vw, 56px); line-height: 1.15; letter-spacing: -.025em; }
+.students-heading > p:last-child { margin: 20px 0 0; color: var(--muted); font-size: 17px; }
+.students-index { display: flex; flex-wrap: wrap; gap: 12px; padding: 30px 0 42px; }
+.students-index a { display: inline-flex; align-items: center; gap: 18px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 4px; background: #fff; color: var(--navy); font-size: 13px; font-weight: 700; }
+.students-index a > span { color: var(--muted); font-weight: 500; }
+.students-page a:hover { color: #0b5cab; }
+.students-page a:focus-visible { outline: 2px solid #0b5cab; outline-offset: 4px; }
+.students-groups { display: grid; gap: 52px; }
+.students-degree-group { scroll-margin-top: 112px; min-width: 0; }
+.students-group-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 0 0 16px; border-bottom: 2px solid var(--navy); }
+.students-group-heading h2 { margin: 0; color: var(--navy); font-size: clamp(23px, 2.7vw, 30px); line-height: 1.3; }
+.students-group-heading > span { flex-shrink: 0; color: var(--muted); font-size: 13px; }
+.student-profile { display: grid; grid-template-columns: 144px minmax(0, 1fr); gap: 34px; padding: 36px 0; border-bottom: 1px solid var(--line); }
+.student-portrait { align-self: start; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; background: #edf2f7; aspect-ratio: 496 / 638; }
+.student-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
+.student-initials { display: grid; place-items: center; width: 100%; height: 100%; color: #8b9eaf; font-size: 34px; font-weight: 600; letter-spacing: .04em; }
+.student-degree { margin: 0 0 5px; color: #63768a; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.student-introduction h3 { margin: 0; color: var(--navy); font-size: clamp(23px, 2.6vw, 29px); line-height: 1.3; }
+.student-introduction h3 > span { display: inline-block; margin-left: 12px; color: var(--muted); font-size: 16px; font-weight: 400; }
+.student-email { display: inline-block; margin-top: 8px; color: var(--navy-2); font-size: 14px; overflow-wrap: anywhere; }
+.student-email span { margin-left: 8px; }
+.student-biography { margin-top: 22px; max-width: 880px; color: #435467; font-size: 15px; line-height: 1.85; overflow-wrap: anywhere; }
+.student-biography p { margin: 0 0 12px; white-space: pre-line; }
+.student-research { margin-top: 22px; }
+.student-research h4 { margin: 0 0 10px; color: #63768a; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.student-research ul { display: flex; flex-wrap: wrap; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.student-research li { max-width: 100%; padding: 5px 10px; border-radius: 3px; color: var(--navy-2); background: var(--soft); font-size: 12px; overflow-wrap: anywhere; }
+.students-empty { margin: 0; padding: 22px 0 0; color: var(--muted); font-size: 14px; }
+.students-page--compact { padding: 0; background: none; }
+.students-page--compact .students-heading { margin-bottom: 36px; }
+.students-view-all { display: inline-block; margin-top: 30px; color: var(--navy-2); font-size: 14px; font-weight: 700; }
+.students-view-all span { margin-left: 10px; }
+@media (max-width: 640px) {
+  .students-index { padding-block: 24px 34px; gap: 8px; }
+  .students-index a { padding: 8px 12px; gap: 12px; font-size: 12px; }
+  .students-heading > p:last-child { font-size: 15px; }
+  .students-groups { gap: 38px; }
+  .student-profile { grid-template-columns: 90px minmax(0, 1fr); gap: 18px; padding-block: 28px; }
+  .student-introduction { display: contents; }
+  .student-degree, .student-introduction h3, .student-email { grid-column: 2; }
+  .student-portrait { grid-column: 1; grid-row: 1 / 4; }
+  .student-degree { align-self: end; margin: 0; font-size: 10px; }
+  .student-introduction h3 { font-size: 23px; align-self: center; overflow-wrap: anywhere; }
+  .student-introduction h3 > span { display: block; margin: 5px 0 0; font-size: 15px; }
+  .student-email { margin: 0; align-self: start; font-size: 12px; }
+  .student-biography, .student-research { grid-column: 1 / -1; margin-top: 2px; }
+  .student-biography p:last-child { margin-bottom: 0; }
+  .student-initials { font-size: 24px; }
+}

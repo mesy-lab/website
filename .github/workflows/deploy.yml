@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.event_name != 'schedule' || vars.GALLERY_SYNC_MODE == 'google-drive-api'
+    if: github.event_name != 'schedule' || vars.GALLERY_SYNC_MODE == 'google-drive-api' || vars.STUDENTS_SYNC_MODE == 'google-drive-api'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -42,11 +42,20 @@ jobs:
       - name: Test Gallery import
         run: npm run test:gallery
 
+      - name: Test Students import
+        run: npm run test:students
+
       - name: Import published Gallery posts from Drive
         if: vars.GALLERY_SYNC_MODE == 'google-drive-api'
         run: npm run gallery:sync:drive
         env:
           GALLERY_DRIVE_SERVICE_ACCOUNT: ${{ secrets.GALLERY_DRIVE_SERVICE_ACCOUNT }}
+
+      - name: Import published Student profiles from Drive
+        if: vars.STUDENTS_SYNC_MODE == 'google-drive-api'
+        run: npm run students:sync:drive
+        env:
+          STUDENTS_DRIVE_SERVICE_ACCOUNT: ${{ secrets.STUDENTS_DRIVE_SERVICE_ACCOUNT || secrets.GALLERY_DRIVE_SERVICE_ACCOUNT }}
 
       - name: Build Vite site
         run: npm run build

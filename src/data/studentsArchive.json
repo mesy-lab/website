@@ -1,0 +1,5 @@
+[
+  { "id": "jaeyong-lee", "name": "Jaeyong Lee", "level": "ms", "email": "robot002@hanyang.ac.kr", "research": ["ROS2-based robot control", "Reinforcement learning Sim2Real"], "biography": "", "order": 1 },
+  { "id": "gihyeon-kim", "name": "Gihyeon Kim", "level": "ms", "email": "gihyeon@hanyang.ac.kr", "research": ["Control algorithm design"], "biography": "", "order": 2 },
+  { "id": "jungmin-kim", "name": "Jungmin Kim", "level": "ms", "email": "az123457963@hanyang.ac.kr", "research": ["Hardware design"], "biography": "", "order": 3 }
+]

@@ -7,8 +7,12 @@
     "gallery:sync": "node scripts/sync-gallery.mjs",
     "gallery:sync:drive": "node scripts/sync-gallery.mjs --drive",
     "gallery:export": "node scripts/export-gallery-drive.mjs",
+    "students:sync": "node scripts/sync-students.mjs",
+    "students:sync:drive": "node scripts/sync-students.mjs --drive",
+    "students:export": "node scripts/export-students-drive.mjs",
+    "test:students": "node --test scripts/sync-students.test.mjs",
     "test:gallery": "node --test scripts/sync-gallery.test.mjs scripts/gallery-drive.test.mjs scripts/check-gallery-drive.test.mjs scripts/export-gallery-drive.test.mjs",
-    "prebuild": "node scripts/sync-gallery.mjs",
+    "prebuild": "node scripts/sync-gallery.mjs && node scripts/sync-students.mjs",
     "dev": "node node_modules/vite/bin/vite.js --host 127.0.0.1",
     "build": "node node_modules/vite/bin/vite.js build",
     "preview": "node node_modules/vite/bin/vite.js preview --host 127.0.0.1"

@@ -1,6 +1,7 @@
 import React from "react";
 import GalleryNews from "./components/GalleryNews.jsx";
 import ProfessorProfile from "./components/ProfessorProfile.jsx";
+import StudentsDirectory from "./components/StudentsDirectory.jsx";
 import {
   HOW_WE_WORK_YOUTUBE_URL,
   getPublishedHowWeWorkVideo,
@@ -170,36 +171,6 @@ const researchVideos = [
     title: "Laboratory Automation Workflow",
     area: "Automation",
   },
-];
-
-const students = [
-  {
-    name: "Jaeyong Lee",
-    level: "ms",
-    degree: "M.S. Student",
-    email: "robot002@hanyang.ac.kr",
-    topic: "ROS2-based robot control and reinforcement learning Sim2Real",
-  },
-  {
-    name: "Gihyeon Kim",
-    level: "ms",
-    degree: "M.S. Student",
-    email: "gihyeon@hanyang.ac.kr",
-    topic: "Control algorithm design",
-  },
-  {
-    name: "Jungmin Kim",
-    level: "ms",
-    degree: "M.S. Student",
-    email: "az123457963@hanyang.ac.kr",
-    topic: "Hardware design",
-  },
-];
-
-const studentGroups = [
-  { id: "phd", title: "Ph.D. Students", badge: "Ph.D." },
-  { id: "ms", title: "M.S. Students", badge: "M.S." },
-  { id: "undergraduate", title: "Undergraduate Students", badge: "UG" },
 ];
 
 const alumni = [
@@ -474,43 +445,7 @@ function Professor({ compact = false }) {
 }
 
 function Students({ compact = false }) {
-  return (
-    <>
-      {!compact && <PageHero eyebrow="Students" title="Current Students" body="Current MESY Lab members organized by degree program." />}
-      <section className={compact ? "category-block" : "section"}>
-        {compact && <SectionHeader eyebrow="Students" title="Current Students" />}
-        <div className="student-groups">
-          {studentGroups.map((group) => {
-            const members = students.filter((student) => student.level === group.id);
-
-            return (
-              <section className="student-group" key={group.id}>
-                <div className="student-group-header">
-                  <h2>{group.title}</h2>
-                  <span>{members.length}</span>
-                </div>
-                {members.length > 0 ? (
-                  <div className="card-grid three">
-                    {members.map((student) => (
-                      <article className="member-card" key={student.email}>
-                        <div className="portrait">{group.badge}</div>
-                        <h3>{student.name}</h3>
-                        <p>{student.degree}</p>
-                        <small>{student.topic}</small>
-                        <a href={`mailto:${student.email}`}>{student.email}</a>
-                      </article>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="member-empty">No current members listed.</p>
-                )}
-              </section>
-            );
-          })}
-        </div>
-      </section>
-    </>
-  );
+  return <StudentsDirectory compact={compact} withBase={withBase} />;
 }
 
 function Alumni({ compact = false }) {

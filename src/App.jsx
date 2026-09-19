@@ -67,7 +67,7 @@ const researchAreas = [
     videoTitle: "Automated Mooring Robot",
     videoDescription:
       "Hydraulically actuated robotic systems for automated ship mooring and coordinated control.",
-    videoId: "",
+    videoId: "tu0e56P845s",
     keywords: ["Hydraulic Actuation", "Force Control", "Multi-Robot Coordination", "Ship Dynamics"],
     items: [
       "Mooring robot mechanism design",
@@ -89,7 +89,7 @@ const researchAreas = [
     videoTitle: "Tracked Mobile Robot Platform",
     videoDescription:
       "Mechanism and system design for robust mobility in rough, cluttered, and discontinuous terrain.",
-    videoId: "",
+    videoId: "KUTcgMbZ1Ts",
     keywords: ["Tracked Robot", "Mechanism Design", "Dynamic Stability", "ROS 2"],
     items: [
       "Extreme-environment mobility",
@@ -111,7 +111,7 @@ const researchAreas = [
     videoTitle: "Perception in Snowy Weather",
     videoDescription:
       "Robust LiDAR, radar, and camera perception when weather degrades conventional sensing.",
-    videoId: "",
+    videoId: "tmxJlbiGWjw",
     keywords: ["LiDAR", "Radar", "Computer Vision", "Adverse Weather"],
     items: [
       "LiDAR snowfall filtering",
@@ -141,30 +141,35 @@ const researchAreas = [
       "ADAMS / Simscape modeling",
       "Model-based engineering",
     ],
-    relatedLabel: null,
+    relatedLabel: "Related publications",
   },
 ];
 
 const researchVideos = [
   {
-    title: "Automated Mooring Robot Demonstration",
+    title: "Coordinated Control for Automated Mooring",
     area: "Marine Robotics",
+    videoId: "tu0e56P845s",
   },
   {
     title: "Tracked Robot Mobility & Stair Traversal",
     area: "Mobile Robotics",
+    videoId: "KUTcgMbZ1Ts",
   },
   {
     title: "LiDAR Perception in Snowfall Conditions",
     area: "Perception",
+    videoId: "tmxJlbiGWjw",
   },
   {
     title: "Ship-Robot Integrated Simulation",
     area: "Simulation",
+    videoId: "IG_6V-vpD-U",
   },
   {
-    title: "Robotic Mechanism Design & Validation",
-    area: "Mechanism",
+    title: "IMU, RGB & Depth-Based Autonomous Stair Climbing",
+    area: "Autonomous Mobility",
+    videoId: "d5qx_z_f_Q0",
   },
   {
     title: "Laboratory Automation Workflow",
@@ -447,41 +452,31 @@ function Alumni({ compact = false }) {
 }
 
 function ResearchVideo({ area }) {
+  const [activeVideoId, setActiveVideoId] = React.useState(null);
   if (area.videoId) {
     return (
-      <div className="research-video-shell">
-        <iframe
-          title={area.videoTitle}
-          src={`https://www.youtube-nocookie.com/embed/${area.videoId}?rel=0`}
-          loading="lazy"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
+      <div className="research-video-block">
+        <HowWeWorkVideo
+          video={{ id: area.id, provider: "youtube", videoId: area.videoId, displayTitle: area.videoTitle,
+            originalTitle: area.videoTitle, mediaType: "Research Video", sourceUrl: `https://www.youtube.com/watch?v=${area.videoId}` }}
+          activeVideoId={activeVideoId}
+          onActivate={setActiveVideoId}
         />
       </div>
     );
   }
 
   return (
-    <div className="research-video-shell">
+    <div className="research-video-block research-video-shell">
       <div className="research-video-placeholder">
         <div>
-          <span className="research-video-label">Representative video</span>
-          <span className="research-video-caption">Replace with YouTube video ID</span>
+          <span className="research-video-label">Video coming soon</span>
         </div>
         <div className="research-video-bottom">
           <div>
             <h3>{area.videoTitle}</h3>
-            <p>{area.videoDescription}</p>
+            <p>A public video of this research area will be shared in the future.</p>
           </div>
-          <a
-            className="research-mini-play"
-            href={YOUTUBE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Watch ${area.videoTitle} on YouTube`}
-          >
-            ▶
-          </a>
         </div>
       </div>
     </div>
@@ -517,15 +512,16 @@ function Research() {
           </div>
           <a
             className="research-showreel"
-            href={YOUTUBE_URL}
+            href="https://www.youtube.com/watch?v=g5WRMQCXwlI"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Open MESY Lab YouTube channel"
+            aria-label="Watch MESY Lab Research Overview on YouTube"
+            style={{ backgroundImage: "linear-gradient(0deg, rgba(4, 18, 31, .9), rgba(4, 18, 31, .15)), url(https://i.ytimg.com/vi/g5WRMQCXwlI/hqdefault.jpg)", backgroundSize: "cover", backgroundPosition: "center" }}
           >
             <div className="research-showreel-copy">
               <span className="research-play">▶</span>
               <strong>MESY Lab Research Overview</strong>
-              <small>Future showreel · 40-60 sec recommended</small>
+              <small>Watch the research overview on YouTube</small>
             </div>
             <span className="research-hero-chip">Mechanism · Dynamics · Control · Perception</span>
           </a>
@@ -613,28 +609,27 @@ function Research() {
               <h2>See the research in motion.</h2>
             </div>
             <p>
-              Use this section for recent experiments, simulation results, system demonstrations, and
-              conference-ready research videos. Each card can link directly to YouTube.
+              Explore experiments, simulation results, and system demonstrations from the MESY Lab YouTube channel.
             </p>
           </div>
           <div className="research-video-grid">
-            {researchVideos.map((video) => (
-              <a
-                className="research-video-card"
-                href={YOUTUBE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+            {researchVideos.map((video) => {
+              const Card = video.videoId ? "a" : "article";
+              return <Card
+                className={`research-video-card${video.videoId ? "" : " research-video-card--pending"}`}
+                {...(video.videoId ? { href: `https://www.youtube.com/watch?v=${video.videoId}`, target: "_blank", rel: "noopener noreferrer" } : {})}
                 key={video.title}
               >
                 <div className="research-video-thumb">
+                  {video.videoId && <img src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`} alt="" loading="lazy" />}
                   <span>{video.area}</span>
                 </div>
                 <div className="research-video-meta">
-                  <small>Research Video</small>
+                  <small>{video.videoId ? "Watch on YouTube ↗" : "Video coming soon"}</small>
                   <h3>{video.title}</h3>
                 </div>
-              </a>
-            ))}
+              </Card>;
+            })}
           </div>
           <div className="research-channel-cta">
             <a
@@ -670,6 +665,7 @@ function HowWeWorkVideo({ video, activeVideoId, onActivate }) {
         ) : isActive ? (
           <iframe
             src={`https://www.youtube-nocookie.com/embed/${video.videoId}?autoplay=1&mute=1&rel=0${startParam}${endParam}`}
+            referrerPolicy="strict-origin-when-cross-origin"
             title={`${video.originalTitle} - MESY Lab research video`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen

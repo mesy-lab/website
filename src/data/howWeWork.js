@@ -1,17 +1,21 @@
 export const HOW_WE_WORK_YOUTUBE_URL = "https://www.youtube.com/@mesylab_hyu";
 
-// Publish the lab-wide edited films when their content has been reviewed.
+// Official lab films, matched to their published channel titles on 2026-09-19.
 export const howWeWorkVideos = Object.fromEntries(
-  ["design", "model-control", "sense-validate"].map((stage) => [
+  [
+    ["design", "7kyg13Z_18c", "Design at MESY Lab", "How we work 01 Design"],
+    ["model-control", "v2xIkzz1Cws", "Model & Control at MESY Lab", "How we work 02 Model&Control"],
+    ["sense-validate", "IkMwZ56pdAg", "Sense & Validate at MESY Lab", "How we work 03 Sense&Validation"],
+  ].map(([stage, videoId, displayTitle, originalTitle]) => [
     `${stage}-overview`,
     {
       id: `${stage}-overview`, stage, project: null,
-      displayTitle: null, originalTitle: null,
-      provider: "youtube", videoId: null, sourceUrl: null,
+      displayTitle, originalTitle,
+      provider: "youtube", videoId, sourceUrl: `https://www.youtube.com/watch?v=${videoId}`,
       localSrc: null, posterSrc: null, captionsSrc: null,
-      mediaType: null, startSeconds: null, endSeconds: null,
-      role: "featured", published: false, verificationStatus: "unverified",
-      verificationNotes: "Awaiting a lab-wide edited film combining relevant research activities.",
+      mediaType: "How We Work", startSeconds: null, endSeconds: null,
+      role: "featured", published: true, verificationStatus: "partially-reviewed",
+      verificationNotes: "Official MESYLAB channel listing and original title verified; uses the complete stage-specific film without inferred timestamps.",
     },
   ]),
 );

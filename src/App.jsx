@@ -50,7 +50,6 @@ const navGroups = [
     href: SCHOLAR_URL,
     external: true,
   },
-  { label: "Projects", href: "/projects" },
   { label: "Gallery & News", href: "/gallery-news" },
   { label: "Contact", href: "/contact" },
 ];
@@ -142,7 +141,7 @@ const researchAreas = [
       "ADAMS / Simscape modeling",
       "Model-based engineering",
     ],
-    relatedLabel: "Related projects",
+    relatedLabel: null,
   },
 ];
 
@@ -238,29 +237,6 @@ const publications = {
     ],
   },
 };
-
-const projects = [
-  {
-    period: "2021.04.01 - 2025.12.31",
-    title: "Smart Port and Autonomous Ship Link Technology",
-    body: "Supported by Korea Institute of Marine Science & Technology Promotion. Total funding: 450,000,000 KRW.",
-  },
-  {
-    period: "2020.03.01 - 2023.02.28",
-    title: "Basic Research Program",
-    body: "Passive vibration reduction technology using quasi-zero stiffness. Supported by NRF. Total funding: 90,000,000 KRW.",
-  },
-  {
-    period: "2021.03.01 - 2021.12.31",
-    title: "Forest Science Technology Development",
-    body: "Automation line development for dried persimmon production. Supported by Korea Forestry Promotion Institute.",
-  },
-  {
-    period: "2019.09.01 - 2022.08.31",
-    title: "Youngnam University New Faculty Research Fund",
-    body: "Core technology development for autonomous driving and walking mobile robots.",
-  },
-];
 
 const news = [
   ["2022 Creative Idea Competition Interview", "Interview related to the 13th Machine Tool Creative Idea Competition.", "publication"],
@@ -592,14 +568,14 @@ function Research() {
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-              <a
+              {area.relatedLabel && <a
                 className="research-text-link"
-                href={area.relatedLabel === "Related projects" ? withBase("/projects") : SCHOLAR_URL}
-                target={area.relatedLabel === "Related projects" ? undefined : "_blank"}
-                rel={area.relatedLabel === "Related projects" ? undefined : "noopener noreferrer"}
+                href={SCHOLAR_URL}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 {area.relatedLabel} <span>→</span>
-              </a>
+              </a>}
             </div>
           </div>
         </section>
@@ -959,29 +935,6 @@ function PublicationList({ items, compact = false }) {
   );
 }
 
-function Projects() {
-  return (
-    <>
-      <PageHero
-        eyebrow="Projects"
-        title="Active and completed research projects."
-        body="Representative MESY Lab projects supported by research agencies, universities, and partner institutions."
-      />
-      <section className="section">
-        <div className="card-grid two">
-          {projects.map((project) => (
-            <article className="project-card" key={project.title}>
-              <small>{project.period}</small>
-              <h2>{project.title}</h2>
-              <p>{project.body}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-    </>
-  );
-}
-
 function Contact() {
   return (
     <>
@@ -1072,7 +1025,6 @@ function App() {
   if (current === "/how-we-work") page = <HowWeWork />;
   if (current === "/publications") page = <Publications />;
   if (current.startsWith("/publications/")) page = <Publications slug={current.split("/").pop()} />;
-  if (current === "/projects") page = <Projects />;
   if (current === "/gallery-news") page = <GalleryNews />;
   if (current === "/contact") page = <Contact />;
 

@@ -932,6 +932,7 @@ function PublicationList({ items, compact = false }) {
 }
 
 function Contact() {
+  const inquiryFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeICPekTOkJBqLmp2Tqi10eQHwXk2O-hrvT6CEIma0xC6M4pA/viewform";
   return (
     <>
       <PageHero eyebrow="Contact" title="Visit, collaborate, or join the lab." body="Contact MESY Lab at Hanyang University ERICA." />
@@ -941,12 +942,12 @@ function Contact() {
           <p>
             <b>Address</b>
             <br />
-            Rm. 210, Building V, 55 Hanyangdaehak-ro, Sangnok-gu, Ansan, Gyeonggi-do, 15588, Republic of Korea
+            Rm. 218, Building V, 55 Hanyangdaehak-ro, Sangnok-gu, Ansan, Gyeonggi-do, 15588, Republic of Korea
           </p>
           <p>
             <b>Korean Address</b>
             <br />
-            경기도 안산시 상록구 한양대학로 55, 한양대학교 ERICA 제5공학관 210호
+            경기도 안산시 상록구 한양대학로 55, 한양대학교 ERICA 제5공학관 218호
           </p>
           <p>
             <b>Email</b>
@@ -959,23 +960,45 @@ function Contact() {
             +82-31-400-5284
           </p>
         </div>
-        <form className="contact-form" onSubmit={(event) => event.preventDefault()}>
-          <label>
-            Name
-            <input type="text" name="name" placeholder="Your name" />
-          </label>
-          <label>
-            Email
-            <input type="email" name="email" placeholder="you@example.com" />
-          </label>
-          <label>
-            Message
-            <textarea name="message" rows="5" placeholder="Type your message" />
-          </label>
-          <button className="button primary" type="submit">
-            Send Message
-          </button>
-        </form>
+        <div className="contact-form">
+          <h2>Send a Message</h2>
+          <p className="contact-form-note">
+            Interested in research collaboration or joining the lab? Tell us about yourself and what you have in mind.
+          </p>
+          <p className="contact-form-note">
+            Leave your name, email address, and message in our inquiry form. We welcome messages in English or Korean and will reply by email.
+          </p>
+          <a className="button primary" href={inquiryFormUrl} target="_blank" rel="noreferrer">
+            Send Message ↗
+          </a>
+          <p className="contact-form-note">
+            Opens Google Forms in a new tab. No Google account required.
+          </p>
+          <p className="contact-form-note">
+            Prefer email? <a href="mailto:jihyuk@hanyang.ac.kr">jihyuk@hanyang.ac.kr</a>
+          </p>
+        </div>
+      </section>
+      <section className="section contact-location" aria-labelledby="contact-location-title">
+        <div className="contact-location-heading">
+          <div>
+            <p className="eyebrow">Location</p>
+            <h2 id="contact-location-title">Find MESY Lab</h2>
+            <p>Engineering Building V, Hanyang University ERICA</p>
+          </div>
+          <a className="button secondary" href="https://maps.app.goo.gl/LHvx9BrWTXeUfPUi9" target="_blank" rel="noreferrer">
+            Open in Google Maps ↗
+          </a>
+        </div>
+        <iframe
+          className="contact-map"
+          title="MESY Lab location on Google Maps"
+          src="https://www.google.com/maps/embed?pb=!1m5!3m3!1m2!1s0x357b6feec047ebb9%3A0xd217277e287fc2d8!2zTWVjaGF0cm9uaWNzIFN5c3RlbSDsl7Dqtazsi6Q!5e0!3m2!1sko!2skr!4v1789825796285!5m2!1sko!2skr"
+          width="1200"
+          height="450"
+          allowFullScreen
+          referrerPolicy="strict-origin-when-cross-origin"
+        />
       </section>
     </>
   );
@@ -1000,7 +1023,7 @@ function Footer() {
         <p>Hanyang University ERICA</p>
       </div>
       <div>
-        <p>Rm. 210, Building V, 55 Hanyangdaehak-ro, Sangnok-gu, Ansan</p>
+        <p>Rm. 218, Building V, 55 Hanyangdaehak-ro, Sangnok-gu, Ansan</p>
         <a href="mailto:jihyuk@hanyang.ac.kr">jihyuk@hanyang.ac.kr</a>
       </div>
       <p>Copyright 2026 MESY Lab. All rights reserved.</p>

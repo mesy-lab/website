@@ -60,7 +60,7 @@ jobs:
       - name: Build Vite site
         run: npm run build
         env:
-          VITE_BASE_PATH: /website/
+          VITE_BASE_PATH: /
 
       - name: Generate route entry pages
         run: node scripts/generate-pages.mjs

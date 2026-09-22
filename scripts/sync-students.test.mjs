@@ -45,11 +45,11 @@ test("defaults old profiles to current and accepts Drive-managed alumni", () => 
   assert.equal(legacy.status, "current");
   const alumnus = parseProfile(profile({
     status: "alumni", name: "Former Member", level: "", email: "", photo: "", research: "",
-    graduationYear: "2025", affiliation: "Korea Institute of Machinery & Materials",
+    graduationYear: "2025", affiliation: "Example Robotics Institute",
   }).split("---")[0] + "---\n", "former-member");
   assert.equal(alumnus.status, "alumni");
   assert.equal(alumnus.graduationYear, "2025");
-  assert.equal(alumnus.affiliation, "Korea Institute of Machinery & Materials");
+  assert.equal(alumnus.affiliation, "Example Robotics Institute");
   assert.equal(alumnus.biography, "");
 });
 
@@ -136,18 +136,14 @@ test("local import matches Drive content; failures preserve existing manifest; u
   await assert.rejects(collectLocalStudents(source),/image extension/);
 });
 
-test("starter export includes current and alumni drafts, never invents biographies or overwrites existing files", async () => {
+test("starter export includes current student drafts, never invents biographies or overwrites existing files", async () => {
   const root=await mkdtemp(path.join(os.tmpdir(),"mesy-students-export-"));
   const destination=path.join(root,"starter");
-  assert.equal(await exportStudentTemplates(destination),14);
+  assert.equal(await exportStudentTemplates(destination),3);
   assert.deepEqual(await collectLocalStudents(destination),{students:[],assets:[]});
   const text=await readFile(path.join(destination,"jaeyong-lee/profile.txt"),"utf8");
   assert.match(text,/published: false/);
   assert.match(text,/status: current/);
   assert.match(text,/\[UNIVERSITY\]/);
-  const alumnus=await readFile(path.join(destination,"bowen-liu/profile.txt"),"utf8");
-  assert.match(alumnus,/status: alumni/);
-  assert.match(alumnus,/graduationYear: 2025/);
-  assert.match(alumnus,/affiliation: Korea Institute of Machinery & Materials/);
   await assert.rejects(exportStudentTemplates(destination),{code:"EEXIST"});
 });

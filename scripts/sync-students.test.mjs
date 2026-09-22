@@ -65,6 +65,19 @@ test("rejects typos, invalid fields, placeholders and traversal instead of publi
   assert.throws(()=>parseProfile(profile(),"../escape"));
 });
 
+test("blank student forms are drafts and do not block other published profiles", async () => {
+  const blank = "published:   \nname:   \nnameKo:  \nlevel:   \nemail:   \nphoto:   \nresearch:   \norder:   \n---\n";
+  assert.equal(parseProfile(blank, "sujin-lee"), null);
+  assert.throws(() => parseProfile(blank.replace("published:   \n", ""), "sujin-lee"), /published/);
+  assert.throws(() => parseProfile(blank.replace("published:   ", "published: true"), "sujin-lee"), /name is required/);
+  const { client, reads } = fixture();
+  const download = client.download;
+  client.download = async (file, limit) => file.id === "draft-meta" ? Buffer.from(blank) : download(file, limit);
+  const result = await collectDriveStudents("root", client);
+  assert.deepEqual(result, await collectDriveStudents("root", fixture().client));
+  assert.ok(!reads.includes("private"));
+});
+
 test("Drive reads Google Docs and only published portraits; drafts and extra files stay unread", async () => {
   const {client, reads}=fixture();
   const result=await collectDriveStudents("root",client);

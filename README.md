@@ -41,6 +41,12 @@ These are excluded by `.gitignore`.
 
 GitHub Actions deploys `main` to GitHub Pages and imports published Drive content on scheduled runs. The production domain is `mesy.hanyang.ac.kr`. The build uses `actions/configure-pages`'s `base_path` output so assets and navigation use `/` on the custom domain and `/website/` on the default repository URL.
 
+## Graduate recruitment
+
+The home page displays the graduate recruitment notice on the first visit in each browser tab. Closing it (including Escape) or following Learn More & Apply dismisses it for the current tab session. The Recruit navigation item and home-page recruitment links always open `/recruit`. The notice uses a native modal dialog, with independently scrollable content and visible close/application controls on small screens.
+
+Edit recruitment copy and the KIMM School URL in `src/components/Recruitment.jsx`, and its layout in `src/components/recruitment.css`. Contact MESY Lab opens the existing Contact page; the application section also provides the lab email for supporting documents. The `/recruit` entry is included in `scripts/generate-pages.mjs` for direct access on GitHub Pages.
+
 ## Contact inquiries
 
 The Contact page opens the published [MESY Lab inquiry form](https://docs.google.com/forms/d/e/1FAIpQLSeICPekTOkJBqLmp2Tqi10eQHwXk2O-hrvT6CEIma0xC6M4pA/viewform). Visitors enter their email, name, and message without signing in to Google.

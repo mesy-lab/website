@@ -3,6 +3,7 @@ import GalleryNews from "./components/GalleryNews.jsx";
 import ProfessorProfile from "./components/ProfessorProfile.jsx";
 import StudentsDirectory from "./components/StudentsDirectory.jsx";
 import AlumniDirectory from "./components/AlumniDirectory.jsx";
+import Recruitment, { RecruitmentPopup } from "./components/Recruitment.jsx";
 import {
   HOW_WE_WORK_YOUTUBE_URL,
   getPublishedHowWeWorkVideo,
@@ -52,6 +53,7 @@ const navGroups = [
     external: true,
   },
   { label: "Gallery & News", href: "/gallery-news" },
+  { label: "Recruit", href: "/recruit" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -318,7 +320,7 @@ function Hero() {
           <a className="button primary" href={withBase("/research")}>
             Explore Research
           </a>
-          <a className="button ghost" href={withBase("/contact")}>
+          <a className="button ghost" href={withBase("/recruit")}>
             Join the Lab
           </a>
         </div>
@@ -379,13 +381,10 @@ function Recruiting() {
     <section className="section">
       <div className="recruit-box">
         <p className="eyebrow">Wanted</p>
-        <h2>Graduate Researchers Wanted</h2>
-        <p>
-          MESY Lab welcomes motivated students interested in mechatronics, robotics, autonomous systems,
-          mechanism design, and intelligent control.
-        </p>
-        <a className="button primary" href="mailto:jihyuk@hanyang.ac.kr">
-          jihyuk@hanyang.ac.kr
+        <h2>Graduate Student Recruitment</h2>
+        <p lang="ko">한양대학교 대학원 학위와 한국기계연구원 연구경험을 함께.<br />MESY Lab에서 <strong>2027년 3월 입학 예정자</strong>를 대상으로 석사·박사과정 대학원생 / KIMM 학생연구원을 모집합니다.</p>
+        <a className="button primary" href={withBase("/recruit")}>
+          Learn More &amp; Apply
         </a>
       </div>
     </section>
@@ -1023,12 +1022,14 @@ function App() {
   if (current.startsWith("/publications/")) page = <Publications slug={current.split("/").pop()} />;
   if (current === "/gallery-news") page = <GalleryNews />;
   if (current === "/contact") page = <Contact />;
+  if (current === "/recruit") page = <Recruitment withBase={withBase} />;
 
   return (
     <>
       <Header />
       <main>{page}</main>
       <Footer />
+      {current === "/" && <RecruitmentPopup withBase={withBase} />}
     </>
   );
 }

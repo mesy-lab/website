@@ -6,7 +6,6 @@ const project = fileURLToPath(new URL("../", import.meta.url));
 
 export async function exportStudentTemplates(destination) {
   const archive = JSON.parse(await readFile(path.join(project, "src/data/studentsArchive.json"), "utf8"));
-  const alumni = JSON.parse(await readFile(path.join(project, "src/data/alumniArchive.json"), "utf8"));
   await mkdir(path.dirname(destination), { recursive: true });
   await mkdir(destination); // Never overwrite student-authored edits.
   await copyFile(path.join(project, "docs/students-guide.md"), path.join(destination, "Students-작성안내.md"));
@@ -22,17 +21,7 @@ export async function exportStudentTemplates(destination) {
     ].join("\n");
     await writeFile(path.join(folder, "profile.txt"), profile, { encoding: "utf8", flag: "wx" });
   }
-  for (const member of alumni) {
-    const folder = path.join(destination, member.id);
-    await mkdir(folder);
-    const profile = [
-      "published: false", "status: alumni", `name: ${member.name}`, "nameKo:", "level:", "email:", "photo:",
-      "research:", `order: ${member.order}`, `graduationYear: ${member.graduationYear}`,
-      `affiliation: ${member.affiliation}`, "---", "",
-    ].join("\n");
-    await writeFile(path.join(folder, "profile.txt"), profile, { encoding: "utf8", flag: "wx" });
-  }
-  return archive.length + alumni.length;
+  return archive.length;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -54,12 +54,6 @@ Biography는 80~150단어 정도의 3인칭 문장을 권장합니다. 학력 �
 
 `published: false`로 변경하거나 학생 폴더를 삭제하면 다음 성공한 배포에서 그 사람의 소개가 빠집니다. 졸업할 때는 폴더를 옮기지 말고 같은 Profile에서 `status: alumni`, `graduationYear`, `affiliation`을 수정합니다. 다음 성공한 배포부터 Students 페이지에서는 빠지고 Alumni 페이지에 표시됩니다. 잘못된 상태·과정·졸업연도, 중복 문서, 사진 누락, 형식 오류가 있으면 해당 배포를 실패시켜 기존 운영 페이지를 유지합니다. 모든 초안은 공개 목록에서 제외됩니다.
 
-### 기존 Alumni 명단을 Drive로 옮기는 방법
-
-`npm run students:export`는 재학생 3명과 기존 Alumni 11명의 비공개 초안을 함께 만듭니다. Alumni 폴더도 Students 폴더 바로 아래에 업로드하고, 각 Profile의 이름·졸업연도·소속을 확인한 뒤 가능한 경우 `level`을 입력합니다. 모든 Alumni 초안이 준비되면 한 번에 `published: true`로 전환합니다.
-
-Drive에 `status: alumni`인 공개 프로필이 하나도 없는 동안에는 기존 Alumni 명단을 안전망으로 표시합니다. Drive Alumni 공개가 시작되면 Drive 목록이 Alumni 페이지의 원본이 되므로, 일부만 공개하지 말고 기존 11명을 모두 준비한 뒤 전환합니다.
-
 ## 관리자: 첫 연결 및 운영
 
 코드에 Students 폴더 ID가 등록되어 있으며 GitHub의 `STUDENTS_SYNC_MODE=google-drive-api`가 설정되어 있습니다. 아래 항목은 최초 연결 및 재설정 절차입니다.
@@ -78,8 +72,8 @@ Drive에 `status: alumni`인 공개 프로필이 하나도 없는 동안에는 �
 
 ```powershell
 npm run students:export
-# exports/students-drive-upload 아래의 재학생·Alumni 폴더만 Students 바로 아래에 업로드합니다.
-# 이 명령은 기존 재학생 3명과 Alumni 11명의 비공개 초안을 만들며 기존 출력 폴더를 덮어쓰지 않습니다.
+# exports/students-drive-upload 아래의 재학생 폴더를 Students 바로 아래에 업로드합니다.
+# 이 명령은 기존 재학생 3명의 비공개 초안을 만들며 기존 출력 폴더를 덮어쓰지 않습니다.
 
 npm run students:sync -- "C:\path\to\Students"
 # 로컬 profile.txt와 사진으로 검사합니다. Google Docs는 클라우드 방식으로 읽습니다.

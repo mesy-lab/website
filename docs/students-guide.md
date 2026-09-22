@@ -18,6 +18,7 @@
 
 ```text
 published: false
+status: current
 name: Your English Name
 nameKo: 한글 이름
 level: ms
@@ -25,19 +26,23 @@ email: your-email@hanyang.ac.kr
 photo: photo.jpg
 research: Robot mechanism design; Mobile robot systems
 order: 10
+graduationYear:
+affiliation:
 ---
 [NAME] received the B.S. degree in [DEGREE] from [UNIVERSITY], [CITY], [COUNTRY], in [YEAR].
 
 [NAME] is currently pursuing the M.S. degree in mechanical engineering at Hanyang University, ERICA Campus, South Korea. [NAME]'s research interests include [RESEARCH INTERESTS].
 ```
 
-1. 이름·과정·이메일을 확인합니다. `nameKo`, `email`, `photo`, `research`는 빈칸이어도 됩니다.
-2. `level`은 박사 `phd`, 석사 `ms`, 석박통합 `integrated`, 학부연구생 `undergraduate` 중 하나입니다.
-3. `photo`에는 사진의 정확한 파일명을 넣습니다. 사진이 없으면 비워두며 홈페이지는 이름 이니셜을 표시합니다. 지정한 사진만 공개되며 JPEG/PNG/WebP, 최대 10 MB를 지원합니다. 세로 사진을 권장합니다.
-4. `research`는 연구 관심 분야를 세미콜론(`;`)으로 구분합니다. 최대 8개입니다.
-5. `order`는 같은 과정 안에서 표시 순서입니다. 작은 숫자가 먼저이며 같으면 영문 이름순입니다. 기존 학생의 순서는 유지합니다.
-6. `---` 아래에 논문 저자 소개 형식의 영문 biography를 작성합니다. 대괄호 항목은 모두 실제 정보로 바꾸고, 예시가 본인에게 맞지 않으면 문장을 고칩니다. 사실을 확인할 수 없는 학력이나 수상 실적을 만들지 않습니다.
-7. 본인 확인이 끝나면 첫 줄을 **`published: true`**로 바꿉니다. 초안은 `false`로 둡니다. `published:` 값이 빈 새 양식도 비공개 초안으로 처리하며 다른 학생의 업데이트를 막지 않습니다. 항목 자체가 없거나 `true`/`false` 이외의 값을 입력하면 오류로 안내합니다.
+1. 재학생은 `status: current`, 졸업생은 `status: alumni`로 작성합니다. 기존 문서에 `status`가 없으면 호환을 위해 재학생으로 처리하지만, 새 문서에는 반드시 적습니다.
+2. 이름·과정·이메일을 확인합니다. `nameKo`, `email`, `photo`, `research`는 빈칸이어도 됩니다.
+3. `level`은 박사 `phd`, 석사 `ms`, 석박통합 `integrated`, 학부연구생 `undergraduate` 중 하나입니다.
+4. `photo`에는 사진의 정확한 파일명을 넣습니다. 사진이 없으면 비워두며 홈페이지는 이름 이니셜을 표시합니다. 지정한 사진만 공개되며 JPEG/PNG/WebP, 최대 10 MB를 지원합니다. 세로 사진을 권장합니다.
+5. `research`는 연구 관심 분야를 세미콜론(`;`)으로 구분합니다. 최대 8개입니다.
+6. `order`는 같은 과정 안에서 표시 순서입니다. 작은 숫자가 먼저이며 같으면 영문 이름순입니다. 기존 학생의 순서는 유지합니다.
+7. 재학생은 `graduationYear`와 `affiliation`을 비워둡니다. 졸업생은 `graduationYear`에 4자리 졸업연도를 쓰고, `affiliation`에는 현재 소속을 씁니다. 소속을 아직 모르면 비워둘 수 있습니다.
+8. `---` 아래에 논문 저자 소개 형식의 영문 biography를 작성합니다. 대괄호 항목은 모두 실제 정보로 바꾸고, 예시가 본인에게 맞지 않으면 문장을 고칩니다. 사실을 확인할 수 없는 학력이나 수상 실적을 만들지 않습니다. 졸업생 biography는 비워둘 수 있습니다.
+9. 본인 확인이 끝나면 첫 줄을 **`published: true`**로 바꿉니다. 초안은 `false`로 둡니다. `published:` 값이 빈 새 양식도 비공개 초안으로 처리하며 다른 학생의 업데이트를 막지 않습니다. 항목 자체가 없거나 `true`/`false` 이외의 값을 입력하면 오류로 안내합니다.
 
 Biography는 80~150단어 정도의 3인칭 문장을 권장합니다. 학력 → 현재 과정/소속 → 연구 관심 분야 순서가 자연스럽습니다. 학부생은 취득하지 않은 학사학위를 적는 대신 현재 학부 재학과 연구 참여를 소개합니다. 석박통합생은 `integrated M.S.–Ph.D. degree`로 현재 과정을 표현합니다. 빈 줄은 홈페이지에서도 문단으로 표시됩니다.
 
@@ -47,7 +52,13 @@ Biography는 80~150단어 정도의 3인칭 문장을 권장합니다. 학력 �
 
 자동 업데이트가 활성화된 뒤에는 기존 예약 배포(매시 23분 UTC, 한국시간도 매시 23분)에서 새 문서 내용을 가져옵니다. GitHub 실행 지연으로 늦어질 수 있습니다. 저장 직후 즉시 반영되는 방식은 아닙니다.
 
-`published: false`로 변경하거나 학생 폴더를 삭제하면 다음 성공한 배포에서 그 학생 소개가 빠집니다. 졸업한 학생을 Alumni로 자동 이전하지는 않습니다. 필요하면 Alumni를 별도로 수정합니다. 잘못된 과정, 중복 문서, 사진 누락, 형식 오류가 있으면 해당 배포를 실패시켜 기존 운영 페이지를 유지합니다. 모든 초안은 공개 목록에서 제외됩니다.
+`published: false`로 변경하거나 학생 폴더를 삭제하면 다음 성공한 배포에서 그 사람의 소개가 빠집니다. 졸업할 때는 폴더를 옮기지 말고 같은 Profile에서 `status: alumni`, `graduationYear`, `affiliation`을 수정합니다. 다음 성공한 배포부터 Students 페이지에서는 빠지고 Alumni 페이지에 표시됩니다. 잘못된 상태·과정·졸업연도, 중복 문서, 사진 누락, 형식 오류가 있으면 해당 배포를 실패시켜 기존 운영 페이지를 유지합니다. 모든 초안은 공개 목록에서 제외됩니다.
+
+### 기존 Alumni 명단을 Drive로 옮기는 방법
+
+`npm run students:export`는 재학생 3명과 기존 Alumni 11명의 비공개 초안을 함께 만듭니다. Alumni 폴더도 Students 폴더 바로 아래에 업로드하고, 각 Profile의 이름·졸업연도·소속을 확인한 뒤 가능한 경우 `level`을 입력합니다. 모든 Alumni 초안이 준비되면 한 번에 `published: true`로 전환합니다.
+
+Drive에 `status: alumni`인 공개 프로필이 하나도 없는 동안에는 기존 Alumni 명단을 안전망으로 표시합니다. Drive Alumni 공개가 시작되면 Drive 목록이 Alumni 페이지의 원본이 되므로, 일부만 공개하지 말고 기존 11명을 모두 준비한 뒤 전환합니다.
 
 ## 관리자: 첫 연결 및 운영
 
@@ -67,8 +78,8 @@ Biography는 80~150단어 정도의 3인칭 문장을 권장합니다. 학력 �
 
 ```powershell
 npm run students:export
-# exports/students-drive-upload 아래의 학생 폴더만 Students 바로 아래에 업로드합니다.
-# 이 명령은 공개되지 않는 초안을 만들며 기존 출력 폴더를 덮어쓰지 않습니다.
+# exports/students-drive-upload 아래의 재학생·Alumni 폴더만 Students 바로 아래에 업로드합니다.
+# 이 명령은 기존 재학생 3명과 Alumni 11명의 비공개 초안을 만들며 기존 출력 폴더를 덮어쓰지 않습니다.
 
 npm run students:sync -- "C:\path\to\Students"
 # 로컬 profile.txt와 사진으로 검사합니다. Google Docs는 클라우드 방식으로 읽습니다.

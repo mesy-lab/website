@@ -11,7 +11,7 @@ const folderType = "application/vnd.google-apps.folder";
 const docType = "application/vnd.google-apps.document";
 const portrait = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aMioAAAAASUVORK5CYII=', 'base64');
 const profile = (overrides = {}) => {
-  const fields = { published: "true", name: "Example Student", nameKo: "예시", level: "ms", email: "student@example.test", photo: "photo.png", research: "Mechanism design; Robot systems", order: "2", ...overrides };
+  const fields = { published: "true", status: "current", name: "Example Student", nameKo: "예시", level: "ms", email: "student@example.test", photo: "photo.png", research: "Mechanism design; Robot systems", order: "2", graduationYear: "", affiliation: "", ...overrides };
   return Object.entries(fields).map(([k,v])=>`${k}: ${v}`).join("\n") + "\n---\nExample Student is pursuing a graduate degree.\n\nThe student's research focuses on robot mechanisms.\n";
 };
 function fixture(text = profile()) {
@@ -40,10 +40,24 @@ test("parses Unicode and paragraphs, supports all degree groups and explicit dra
   assert.equal(parseProfile("published: false\n---\n", "draft"), null);
 });
 
+test("defaults old profiles to current and accepts Drive-managed alumni", () => {
+  const legacy = parseProfile(profile({ status: undefined }).replace("status: undefined\n", ""), "legacy-student");
+  assert.equal(legacy.status, "current");
+  const alumnus = parseProfile(profile({
+    status: "alumni", name: "Former Member", level: "", email: "", photo: "", research: "",
+    graduationYear: "2025", affiliation: "Korea Institute of Machinery & Materials",
+  }).split("---")[0] + "---\n", "former-member");
+  assert.equal(alumnus.status, "alumni");
+  assert.equal(alumnus.graduationYear, "2025");
+  assert.equal(alumnus.affiliation, "Korea Institute of Machinery & Materials");
+  assert.equal(alumnus.biography, "");
+});
+
 test("rejects typos, invalid fields, placeholders and traversal instead of publishing incomplete data", () => {
-  for (const change of [{published:"yes"}, {level:"masters"}, {photo:"../photo.png"}, {photo:"https://example.test/a.png"}, {email:"x@example.test?bcc=x"}, {name:""}, {order:"-1"}]) {
+  for (const change of [{published:"yes"}, {status:"former"}, {level:"masters"}, {photo:"../photo.png"}, {photo:"https://example.test/a.png"}, {email:"x@example.test?bcc=x"}, {name:""}, {order:"-1"}, {graduationYear:"2025"}]) {
     assert.throws(()=>parseProfile(profile(change),"example-student"));
   }
+  assert.throws(()=>parseProfile(profile({status:"alumni",graduationYear:"25"}),"example-student"),/graduationYear/);
   assert.throws(()=>parseProfile(profile().replace("---", "name: Duplicate\n---"),"example-student"), /duplicate/);
   assert.throws(()=>parseProfile(profile({publish:"true"}),"example-student"), /unknown/);
   assert.throws(()=>parseProfile(profile().split("---")[0]+"---\n[NAME] from [UNIVERSITY]", "example-student"), /template/);
@@ -122,13 +136,18 @@ test("local import matches Drive content; failures preserve existing manifest; u
   await assert.rejects(collectLocalStudents(source),/image extension/);
 });
 
-test("starter export has three editable drafts, never invents biographies or overwrites existing files", async () => {
+test("starter export includes current and alumni drafts, never invents biographies or overwrites existing files", async () => {
   const root=await mkdtemp(path.join(os.tmpdir(),"mesy-students-export-"));
   const destination=path.join(root,"starter");
-  assert.equal(await exportStudentTemplates(destination),3);
+  assert.equal(await exportStudentTemplates(destination),14);
   assert.deepEqual(await collectLocalStudents(destination),{students:[],assets:[]});
   const text=await readFile(path.join(destination,"jaeyong-lee/profile.txt"),"utf8");
   assert.match(text,/published: false/);
+  assert.match(text,/status: current/);
   assert.match(text,/\[UNIVERSITY\]/);
+  const alumnus=await readFile(path.join(destination,"bowen-liu/profile.txt"),"utf8");
+  assert.match(alumnus,/status: alumni/);
+  assert.match(alumnus,/graduationYear: 2025/);
+  assert.match(alumnus,/affiliation: Korea Institute of Machinery & Materials/);
   await assert.rejects(exportStudentTemplates(destination),{code:"EEXIST"});
 });

@@ -2,6 +2,7 @@ import React from "react";
 import GalleryNews from "./components/GalleryNews.jsx";
 import ProfessorProfile from "./components/ProfessorProfile.jsx";
 import StudentsDirectory from "./components/StudentsDirectory.jsx";
+import AlumniDirectory from "./components/AlumniDirectory.jsx";
 import {
   HOW_WE_WORK_YOUTUBE_URL,
   getPublishedHowWeWorkVideo,
@@ -175,20 +176,6 @@ const researchVideos = [
     title: "Laboratory Automation Workflow",
     area: "Automation",
   },
-];
-
-const alumni = [
-  ["Jeongmin Kwon", "2026", "TBD"],
-  ["Junhyeok Seo", "2026", "TBD"],
-  ["Jiwon Kim", "2026", "TBD"],
-  ["Seungji Kang", "2026", "TBD"],
-  ["Bowen Liu", "2025", "Korea Institute of Machinery & Materials"],
-  ["Hyemin Ryu", "2025", "Daegu Tech"],
-  ["Seungjin Lee", "2024", "GS Caltex"],
-  ["Hayoung Shin", "2023", "Hyundai Rotem"],
-  ["Li Bowen", "2022", "BYD"],
-  ["Jinhwan Choi", "2021", "Hanwha Systems"],
-  ["Hyemin Ryu", "2021", "LG Display"],
 ];
 
 const publications = {
@@ -430,22 +417,12 @@ function Students({ compact = false }) {
 }
 
 function Alumni({ compact = false }) {
-  const shown = compact ? alumni.slice(0, 6) : alumni;
   return (
     <>
       {!compact && <PageHero eyebrow="Alumni" title="Former Members" body="MESY Lab alumni and their current affiliations." />}
       <section className={compact ? "category-block" : "section"}>
         {compact && <SectionHeader eyebrow="Alumni" title="Former Members" />}
-        <div className="card-grid four">
-          {shown.map(([name, year, company]) => (
-            <article className="member-card" key={`${name}-${year}`}>
-              <div className="portrait">Al</div>
-              <h3>{name}</h3>
-              <p>Graduation: {year}</p>
-              <small>{company}</small>
-            </article>
-          ))}
-        </div>
+        <AlumniDirectory compact={compact} withBase={withBase} />
       </section>
     </>
   );

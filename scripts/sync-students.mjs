@@ -10,7 +10,11 @@ const documentType = "application/vnd.google-apps.document";
 const maxText = 64 * 1024;
 const maxPhoto = 10 * 1024 * 1024;
 const maxTotal = 100 * 1024 * 1024;
-const fields = new Set(["published", "name", "nameKo", "level", "email", "photo", "research", "order"]);
+const fields = new Set([
+  "published", "status", "name", "nameKo", "level", "email", "photo", "research", "order",
+  "graduationYear", "affiliation",
+]);
+const levels = new Set(["phd", "integrated", "ms", "undergraduate"]);
 
 export function parseProfile(text, id) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) throw new Error(`${id}: use an English lowercase folder name with hyphens`);
@@ -28,18 +32,30 @@ export function parseProfile(text, id) {
   // A new, blank form is a draft. Publication still requires an explicit true.
   if (values.published === "" || values.published === "false") return null;
   if (values.published !== "true") throw new Error(`${id}: published must be true or false (leave blank for a draft)`);
+  const status = values.status || "current";
+  if (!["current", "alumni"].includes(status)) throw new Error(`${id}: status must be current or alumni`);
   const biography = lines.slice(divider + 1).join("\n").trim();
   if (!values.name || values.name.length > 100) throw new Error(`${id}: name is required (up to 100 characters)`);
   if ((values.nameKo || "").length > 100) throw new Error(`${id}: nameKo is too long`);
-  if (!["phd", "integrated", "ms", "undergraduate"].includes(values.level)) throw new Error(`${id}: invalid level`);
+  if (status === "current" && !levels.has(values.level)) throw new Error(`${id}: current members need a valid level`);
+  if (status === "alumni" && values.level && !levels.has(values.level)) throw new Error(`${id}: invalid level`);
   if (values.email && !/^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$/.test(values.email)) throw new Error(`${id}: invalid email`);
-  if (!biography || biography.length > 12000 || /\[(?:NAME|UNIVERSITY|CITY|COUNTRY|YEAR|DEGREE|RESEARCH INTERESTS|WRITE BIOGRAPHY)[^\]]*\]/i.test(biography)) throw new Error(`${id}: replace the biography template with your own text (up to 12000 characters)`);
+  const hasTemplateText = /\[(?:NAME|UNIVERSITY|CITY|COUNTRY|YEAR|DEGREE|RESEARCH INTERESTS|WRITE BIOGRAPHY)[^\]]*\]/i.test(biography);
+  if ((status === "current" && !biography) || biography.length > 12000 || hasTemplateText) throw new Error(`${id}: replace the biography template with your own text (up to 12000 characters)`);
   if (values.photo && !/^[a-zA-Z0-9][a-zA-Z0-9_-]*\.(jpg|jpeg|png|webp)$/i.test(values.photo)) throw new Error(`${id}: photo must be a filename such as photo.jpg, not a path or URL`);
   const order = values.order ? Number(values.order) : 0;
   if (!Number.isInteger(order) || order < 0 || order > 10000) throw new Error(`${id}: order must be an integer from 0 to 10000`);
   const research = (values.research || "").split(";").map((s) => s.trim()).filter(Boolean);
   if (research.length > 8 || research.some((s) => s.length > 150)) throw new Error(`${id}: use up to 8 short research interests separated by semicolons`);
-  return { id, name: values.name, nameKo: values.nameKo || "", level: values.level, email: values.email || "", research, biography, order, photoFilename: values.photo || "" };
+  const graduationYear = values.graduationYear || "";
+  if (status === "alumni" && !/^(19|20)\d{2}$/.test(graduationYear)) throw new Error(`${id}: alumni need a four-digit graduationYear`);
+  if (status === "current" && (graduationYear || values.affiliation)) throw new Error(`${id}: graduationYear and affiliation are for alumni only`);
+  if ((values.affiliation || "").length > 200) throw new Error(`${id}: affiliation is too long`);
+  return {
+    id, status, name: values.name, nameKo: values.nameKo || "", level: values.level || "",
+    email: values.email || "", research, biography, order, graduationYear,
+    affiliation: values.affiliation || "", photoFilename: values.photo || "",
+  };
 }
 
 function validatePhoto(data, ext, id) {

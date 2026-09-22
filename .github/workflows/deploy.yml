@@ -57,16 +57,17 @@ jobs:
         env:
           STUDENTS_DRIVE_SERVICE_ACCOUNT: ${{ secrets.STUDENTS_DRIVE_SERVICE_ACCOUNT || secrets.GALLERY_DRIVE_SERVICE_ACCOUNT }}
 
+      - name: Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
       - name: Build Vite site
         run: npm run build
         env:
-          VITE_BASE_PATH: /website/
+          VITE_BASE_PATH: ${{ steps.pages.outputs.base_path }}/
 
       - name: Generate route entry pages
         run: node scripts/generate-pages.mjs
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v6
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5

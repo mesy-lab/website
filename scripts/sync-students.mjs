@@ -25,8 +25,9 @@ export function parseProfile(text, id) {
     if (Object.hasOwn(values, match[1])) throw new Error(`${id}: duplicate ${match[1]} field`);
     values[match[1]] = match[2];
   }
-  if (!["true", "false"].includes(values.published)) throw new Error(`${id}: published must be true or false`);
-  if (values.published === "false") return null;
+  // A new, blank form is a draft. Publication still requires an explicit true.
+  if (values.published === "" || values.published === "false") return null;
+  if (values.published !== "true") throw new Error(`${id}: published must be true or false (leave blank for a draft)`);
   const biography = lines.slice(divider + 1).join("\n").trim();
   if (!values.name || values.name.length > 100) throw new Error(`${id}: name is required (up to 100 characters)`);
   if ((values.nameKo || "").length > 100) throw new Error(`${id}: nameKo is too long`);

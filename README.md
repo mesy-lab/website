@@ -39,7 +39,7 @@ These are excluded by `.gitignore`.
 
 ## Deployment
 
-Deployment configuration will be added after the source is verified in GitHub. The intended production domain is `mesy.hanyang.ac.kr`.
+GitHub Actions deploys `main` to GitHub Pages and imports published Drive content on scheduled runs. The production domain is `mesy.hanyang.ac.kr`. The build uses `actions/configure-pages`'s `base_path` output so assets and navigation use `/` on the custom domain and `/website/` on the default repository URL.
 
 ## Contact inquiries
 
